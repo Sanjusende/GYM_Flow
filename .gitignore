@@ -1,0 +1,136 @@
+# ==============================================================================
+# GymFlow SaaS — Comprehensive Root .gitignore
+# Covers: Node.js (Backend), React/Vite (Web Frontend), Flutter (Mobile), OS & IDEs
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment Variables & Secrets (CRITICAL)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.env
+backend/.env
+web-frontend/.env
+*.local
+
+# ------------------------------------------------------------------------------
+# 2. Dependencies & Package Managers
+# ------------------------------------------------------------------------------
+node_modules/
+backend/node_modules/
+web-frontend/node_modules/
+jspm_packages/
+.pnp
+.pnp.js
+
+# ------------------------------------------------------------------------------
+# 3. Build & Distribution Outputs
+# ------------------------------------------------------------------------------
+# Web Frontend (Vite / React)
+dist/
+dist-ssr/
+build/
+web-frontend/dist/
+web-frontend/build/
+*.tsbuildinfo
+.vite/
+
+# ------------------------------------------------------------------------------
+# 4. Logs & Diagnostics
+# ------------------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ------------------------------------------------------------------------------
+# 5. Flutter & Dart (Mobile App)
+# ------------------------------------------------------------------------------
+flutter_app/.dart_tool/
+flutter_app/.packages
+flutter_app/.pub-cache/
+flutter_app/.pub/
+flutter_app/build/
+flutter_app/.flutter-plugins
+flutter_app/.flutter-plugins-dependencies
+
+# General Dart / Flutter artifacts
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+*.epk
+*.apk
+*.aab
+*.ipa
+
+# Android build outputs inside Flutter
+flutter_app/android/.gradle/
+flutter_app/android/app/build/
+flutter_app/android/local.properties
+flutter_app/android/key.jks
+flutter_app/android/keystore.jks
+
+# iOS build outputs inside Flutter
+flutter_app/ios/.generated/
+flutter_app/ios/Flutter/App.framework
+flutter_app/ios/Flutter/Flutter.framework
+flutter_app/ios/Flutter/Flutter.podspec
+flutter_app/ios/Flutter/Generated.xcconfig
+flutter_app/ios/Flutter/app.flx
+flutter_app/ios/Pods/
+flutter_app/ios/.symlinks/
+flutter_app/ios/Podfile.lock
+
+# ------------------------------------------------------------------------------
+# 6. IDEs & Editors
+# ------------------------------------------------------------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
+*.iml
+*.iws
+*.ipr
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+
+# ------------------------------------------------------------------------------
+# 7. Operating System Artifacts
+# ------------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# ------------------------------------------------------------------------------
+# 8. Temporary & Testing Artifacts
+# ------------------------------------------------------------------------------
+coverage/
+.nyc_output/
+*.tmp
+*.temp
+*.bak
