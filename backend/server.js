@@ -73,31 +73,19 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // NoSQL Injection Protection
 app.use(mongoSanitize());
 
-// Keep-alive / Health Check endpoint for Render free-tier & Uptime monitors (before rate limiter)
+// Ultra-lightweight Keep-alive / Health Check endpoint (Prevents "output too large" in cron-job.org / monitors)
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'OK',
-    message: 'GymFlow API is awake',
-    istTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-  });
+  res.status(200).json({ ok: true });
 });
 
-// Manual / External Cron Webhook trigger endpoint (e.g. cron-job.org at 12:00 AM IST)
+// Ultra-lightweight Manual / External Cron Webhook trigger endpoint for cron-job.org
 app.get('/api/cron/run-expiry-check', async (req, res) => {
   try {
-    const summary = await updateMemberStatuses();
-    res.status(200).json({
-      success: true,
-      message: 'Member expiry statuses checked and updated successfully',
-      istTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
-      data: summary,
-    });
+    await updateMemberStatuses();
+    res.status(200).json({ ok: true });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Failed to run member expiry check',
-      error: error.message,
-    });
+    console.error('❌ Error in /api/cron/run-expiry-check:', error.message);
+    res.status(500).json({ ok: false });
   }
 });
 
