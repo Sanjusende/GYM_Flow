@@ -4,8 +4,8 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
-const { initCronJobs } = require('./utils/cronJobs');
-const { apiLimiter, authLimiter } = require('./middlewares/rateLimiter');
+const { initCronJobs, updateMemberStatuses } = require('./utils/cronJobs');
+const { apiLimiter } = require('./middlewares/rateLimiter');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
 
 // Route imports
@@ -15,37 +15,96 @@ const memberRoutes = require('./routes/memberRoutes');
 const planRoutes = require('./routes/planRoutes');
 const publicRoutes = require('./routes/publicRoutes');
 const dns = require('dns');
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+
+// DNS server fallback for MongoDB SRV lookups
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+  // Ignore in environments where setServers is restricted
+}
 
 // Load environment variables
 dotenv.config();
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB and initialize background cron after connection is established
+connectDB()
+  .then(() => {
+    initCronJobs();
+  })
+  .catch((err) => {
+    console.error('⚠️ Database connection warning during startup:', err.message);
+  });
 
 const app = express();
 
 // Security Middlewares (MANDATORY)
 app.use(helmet());
+
+// Production & Development CORS Configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps, curl, uptime bots, cron-job.org)
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.vercel.app') ||
+        process.env.NODE_ENV !== 'production' ||
+        !process.env.FRONTEND_URL
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
   })
 );
 
-// Express Body Parser (Extended limit to support high-res Base64 UPI QR uploads)
-app.use(express.json({ limit: '25mb' }));
-app.use(express.urlencoded({ extended: true, limit: '25mb' }));
+// Express Body Parser (10mb limit for Base64 UPI QR image uploads)
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // NoSQL Injection Protection
 app.use(mongoSanitize());
 
-// Apply rate limiting to all requests
+// Keep-alive / Health Check endpoint for Render free-tier & Uptime monitors (before rate limiter)
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    message: 'GymFlow API is awake',
+    istTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+  });
+});
+
+// Manual / External Cron Webhook trigger endpoint (e.g. cron-job.org at 12:00 AM IST)
+app.get('/api/cron/run-expiry-check', async (req, res) => {
+  try {
+    const summary = await updateMemberStatuses();
+    res.status(200).json({
+      success: true,
+      message: 'Member expiry statuses checked and updated successfully',
+      istTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      data: summary,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Failed to run member expiry check',
+      error: error.message,
+    });
+  }
+});
+
+// Apply rate limiting to all general /api routes
 app.use('/api', apiLimiter);
 
-// Health check endpoint
+// Root informational endpoint
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -53,6 +112,8 @@ app.get('/', (req, res) => {
     status: 'ACTIVE 🟢',
     version: '1.0.0',
     documentation: {
+      health: '/api/health',
+      cronWebhook: '/api/cron/run-expiry-check',
       auth: '/api/auth (register [Step 1: OTP], verify-otp [Step 2], login, demo-login)',
       dashboard: '/api/dashboard/stats',
       members: '/api/members (GET, POST, PUT renew, PUT clear-due)',
@@ -60,6 +121,7 @@ app.get('/', (req, res) => {
       publicPortal: '/api/public/member/:phone',
       publicDiet: '/api/public/member/:id/diet',
     },
+    istTime: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
     timestamp: new Date(),
   });
 });
@@ -75,9 +137,6 @@ app.use('/api/public', publicRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-// Start Automated Nightly Cron (12:00 AM)
-initCronJobs();
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
@@ -85,6 +144,8 @@ app.listen(PORT, () => {
   🚀 ═══════════════════════════════════════════════════════════════ 🚀
      GymFlow SaaS Shared REST API running at: http://localhost:${PORT}
      Environment: ${process.env.NODE_ENV || 'development'}
+     ⚡ Health Check: GET /api/health
+     ⏰ Cron Webhook: GET /api/cron/run-expiry-check
      ⚡ 1-Click Demo Login: POST /api/auth/demo-login
      📱 Public Member Portal: GET /api/public/member/:phone
      🥗 Gemini Indian Diet: POST /api/public/member/:id/diet

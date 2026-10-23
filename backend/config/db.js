@@ -20,6 +20,7 @@ const connectDB = async () => {
       serverSelectionTimeoutMS: 5000,
     });
     console.log(`✅ MongoDB Connected Successfully: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
     console.warn(`⚠️ MongoDB Connection Notice: ${error.message}`);
     if (error.message.includes('bad auth') || error.message.includes('authentication failed')) {
