@@ -1,445 +1,426 @@
-<div align="center">
+ <div align="center">
 
-# 🏋️‍♂️ GymFlow SaaS — Multi-Tenant Gym Management & AI Diet Platform
+# 🏋️ GymFlow SaaS
 
-> **An enterprise-grade, multi-tenant Operating System engineered for Indian fitness centers.**  
-> Features zero-cost **Hinglish WhatsApp Fee Reminders**, **Udhaari (Pending Dues) Tracking**, **2-Step Nodemailer Email OTP Onboarding**, **Dynamic UPI QR Billing**, and **Cached Gemini 2.5 AI Indian Diet Plans**.
+### Smart Gym Management System
 
----
+**Manage members. Track payments. Automate renewals. Simplify gym operations.**
 
-[![Node.js](https://img.shields.io/badge/Node.js-18.x%20%7C%2020.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-4.18.2-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![React](https://img.shields.io/badge/React.js-18.2-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Flutter](https://img.shields.io/badge/Flutter-3.x%20Cross--Platform-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev/)
-[![MongoDB Atlas](https://img.shields.io/badge/MongoDB-Atlas%20%2F%20Mongoose-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4%20Dark%20Slate-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![JWT Auth](https://img.shields.io/badge/JWT-Secure%20Multi--Tenant-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
-[![Nodemailer](https://img.shields.io/badge/Nodemailer-HTML%20Email%20OTP-007ACC?style=for-the-badge&logo=gmail&logoColor=white)](https://nodemailer.com/)
-[![Google Gemini AI](https://img.shields.io/badge/Google_Gemini-2.5%20Flash%20AI%20Diet-8E75C2?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+A full-stack MERN application designed to help gym owners manage members, memberships, payments, pending fees, and AI-powered diet plans from one centralized dashboard.
 
----
+<p>
+  <img src="https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Node.js-Backend-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/Express.js-API-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express.js" />
+  <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-Styling-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+</p>
 
-[⚡ 1-Click Recruiter Demo](#-1-click-recruiter-demo-login) •
-[🎯 Problem & Solution](#-the-real-world-problem--solution) •
-[✨ Key Features](#-key-features-breakdown) •
-[🏛️ System Architecture](#️-system-architecture-diagram) •
-[🗄️ Database Schemas](#️-database-schema-overview) •
-[📡 REST API Reference](#-complete-rest-api-reference) •
-[🚀 Local Installation](#-local-installation--environment-setup)
-
----
+<p>
+  <img src="https://img.shields.io/badge/Architecture-MERN_Stack-blue?style=flat-square" alt="MERN Stack" />
+  <img src="https://img.shields.io/badge/AI-Google_Gemini-8E75B2?style=flat-square" alt="Google Gemini" />
+  <img src="https://img.shields.io/badge/Status-Development-orange?style=flat-square" alt="Development Status" />
+</p>
 
 </div>
 
-## 🎯 The Real-World Problem & Solution
+---
 
-### ⚠️ The Problem: How Indian Gyms Operate Today
-1. **Paper Registers & Excel Chaos:** Over 85% of tier-1, tier-2, and tier-3 Indian gym owners still record member registrations and renewal dates in paper logbooks or loose spiral notebooks.
-2. **The "Silent Revenue Leak" (Forgotten Expiries):** Gym owners forget whose membership expired. Members keep working out for 2–3 weeks free of charge until someone manually remembers to check.
-3. **Pending Dues (*Udhaari* Culture):** Gym goers frequently pay in partial instalments (e.g., paying ₹1,000 upfront out of a ₹1,500 monthly fee, promising *"Bhai baaki agle hafte dunga"*). Owners lose track of outstanding balances.
-4. **Expensive SMS & WhatsApp API Gateways:** Traditional SaaS platforms charge thousands of rupees per month for Meta WhatsApp Cloud API access or Twilio SMS credits, making them unaffordable for independent gym owners.
-5. **Generic Western Diet Plans:** Mainstream fitness software recommends avocado, salmon, turkey, and blueberries—completely irrelevant and unaffordable for average Indian lifters who rely on Sattu, Paneer, Soya Chunks, Dal, Sprouts, Eggs, and Roti.
+## 📑 Table of Contents
 
-### 💡 The Solution: GymFlow SaaS
-- **Strict Multi-Tenant Isolation:** Multiple independent gyms run securely on a single backend infrastructure with strict cryptographic and query-level `gymId` partitioning.
-- **Zero-Cost 1-Click WhatsApp Reminders:** Employs browser and native `wa.me` deep-linking to dispatch polite, Hinglish fee notices directly to the member's WhatsApp chat with zero monthly messaging costs.
-- **Actionable 4-KPI Dashboard:** Instantly displays **Active Members**, **Expiring in 5 Days**, **Expired Members**, and total **Udhaari (Pending Dues ₹)**.
-- **Automated Nightly Expiry Engine:** A background `node-cron` daemon evaluates timestamps every night at midnight to transition statuses seamlessly (`Active` ➔ `Expiring_Soon` ➔ `Expired`).
-- **Dynamic UPI QR & Custom Scanner Support:** Onboard with custom UPI IDs and upload official QR scanner images (GPay, PhonePe, Paytm, BHIM) or rely on instant on-the-fly QR generation.
-- **Localized Gemini 2.5 Flash Indian AI Diet Generator:** Formulates affordable, protein-dense vegetarian, eggetarian, and non-vegetarian Indian diet charts with 7-day in-database caching to eliminate API token waste.
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Technology Stack](#-technology-stack)
+- [Application Architecture](#-application-architecture)
+- [Project Structure](#-project-structure)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Application Modules](#-application-modules)
+- [Security Best Practices](#-security-best-practices)
+- [Future Enhancements](#-future-enhancements)
+- [Author](#-author)
 
 ---
 
-## ⚡ 1-Click Recruiter Demo Login
+## 🚀 Overview
 
-No registration or manual database seeding is required to explore GymFlow:
-1. Open the **Web App** (`http://localhost:5173`) or **Flutter Mobile App**.
-2. Click the bright **"⚡ 1-Click Demo Login"** button on the login screen.
-3. The platform instantly generates a demo session for **Iron Paradise Fitness Club** (`demo@gymflow.in`) pre-loaded with **20 realistic Indian members** spanning active memberships, upcoming expiries, overdue renewals, and pending *Udhaari* balances!
+**GymFlow SaaS** is a gym management platform built with the MERN stack to simplify the daily operations of fitness centers and gyms.
 
----
+Traditional gym management often involves manually tracking member records, membership expiry dates, payments, and outstanding fees. GymFlow brings these activities together in a centralized application.
 
-## ✨ Key Features Breakdown
+The platform helps gym owners organize member information, monitor revenue-related records, manage membership packages, and communicate with members about renewals and pending payments.
 
-### 1. 🏢 Multi-Tenant SaaS Architecture
-- **Complete Tenant Isolation:** Every request to protected routes passes through `authMiddleware.js`. The decoded JWT injects `req.gymId`, guaranteeing that no gym owner can ever view, update, or delete another gym's members, plans, or revenue data.
-- **Per-Tenant Configuration:** Individual gym names, owner details, customized membership tiers, UPI IDs, and QR codes are bound strictly to the tenant's ObjectId.
+It also includes an AI-powered diet planner designed to generate personalized Indian diet suggestions using Google Gemini.
 
-### 2. 🔐 2-Step Email OTP & UPI QR Onboarding
-- **Step 1 — Registration Request:** Owner submits name, mobile number, email, password, gym name, UPI ID, and optional UPI QR scanner image.
-- **Step 2 — Dark-Themed Nodemailer Email OTP:** An automated 6-digit verification code is delivered via Gmail SMTP using a responsive dark-themed HTML email template.
-- **UPI QR Scanner Image:** Accepts base64 high-resolution uploads of official GPay/PhonePe/Paytm QR codes or auto-generates dynamic payment codes on the fly using standard `upi://pay?pa=...` standards.
+### 🎯 Project Objectives
 
-### 3. 📊 Actionable Owner Dashboard
-- **Top Metric Cards:**
-  - 🟢 **Active Members:** Subscriptions valid beyond 5 days.
-  - 🟡 **Expiring in 5 Days:** Actionable list with 1-click WhatsApp alerts.
-  - 🔴 **Expired Members:** Subscriptions that have lapsed.
-  - 🟠 **Pending Udhaari:** Total outstanding debts across all members.
-  - 💰 **Monthly Revenue:** Total cash & UPI collections realized in the current calendar month.
-- **Fast Filter Tabs:** Instantly toggle the Member Ledger by **All**, **Active**, **Expiring (≤ 5 Days)**, **Expired**, and **Udhaari Only**.
-
-### 4. 💬 Zero-Cost 1-Click WhatsApp Reminders
-- Generates localized, courteous Hinglish notifications via `wa.me/91<phone>?text=...`:
-  - **Expiring Soon:** *"Namaste Rahul ji! 🙏 Aapki Iron Paradise Fitness ki gym membership agle 3 dino me expire hone wali hai. Continue rakhne ke liye UPI se renew karein: ironparadise@okaxis"*
-  - **Expired with Pending Dues (*Udhaari*):** *"Namaste Amit ji! Aapki gym membership expire ho chuki hai aur ₹500 baaki hai. Please clear via UPI: ironparadise@okaxis"*
-- Requires **zero third-party SMS/WhatsApp gateway fees**.
-
-### 5. ⏰ Automated Nightly Expiry Engine
-- Managed by `node-cron` running at **12:00 AM every midnight (`0 0 * * *`)**.
-- Executes atomic bulk operations (`Member.updateMany`) comparing `endDate` against `new Date()` to seamlessly update membership flags across the entire database.
-
-### 6. 📱 Public Member Portal & Cached Gemini AI Indian Diets
-- **Passwordless Phone Lookup:** Gym members navigate to `/member-portal` (or enter their 10-digit mobile number) to view their digital membership pass, expiry countdown, payment history, and instant UPI pay link.
-- **7-Day Gemini AI Diet Generator:** Generates customized Indian meal plans (Veg / Egg / Non-Veg) highlighting Paneer, Soya Chunks, Dal, Sprouts, Sattu, Eggs, Chicken, and Dahi. Cached in MongoDB for **7 days** to minimize Gemini API consumption.
+- Simplify gym administration and member management.
+- Make membership and payment tracking easier.
+- Reduce manual effort in identifying expiring memberships.
+- Help gym owners follow up on outstanding payments.
+- Provide convenient access to membership information.
+- Offer AI-assisted diet suggestions to support member engagement.
 
 ---
 
-## 🏛️ System Architecture Diagram
+## ✨ Key Features
 
-```mermaid
-flowchart TB
-    subgraph CLIENTS ["Client Layer"]
-        WEB["🖥️ React 18 + Vite Web App\n(Tailwind CSS Dark Theme)"]
-        MOBILE["📱 Flutter 3.x Mobile App\n(Android & iOS)"]
-        PUBLIC["🌐 Public Member Portal\n(Passwordless Phone Search)"]
-    end
+### 📊 1. Dashboard & Analytics
 
-    subgraph SECURITY ["Security & Middleware Layer"]
-        CORS["Cross-Origin Resource Sharing (CORS)"]
-        HELMET["HTTP Security Headers (Helmet)"]
-        SANITIZE["NoSQL Injection Guard (mongoSanitize)"]
-        RATELIMIT["Rate Limiters (Auth: 30/10m, AI: 20/5m, API: 300/15m)"]
-        JWT_AUTH["JWT Authentication Middleware\n(Extracts & Binds req.gymId)"]
-    end
+- View key gym statistics in one place.
+- Monitor membership and payment information.
+- Get a centralized overview of gym operations.
 
-    subgraph BACKEND ["Express.js RESTful Micro-Services Layer"]
-        AUTH_CTRL["authController\n(2-Step OTP, Verify, Demo Login)"]
-        DASH_CTRL["dashboardController\n(4 KPIs, Monthly Collections, Lists)"]
-        MEM_CTRL["memberController\n(10s Registration, Renewal, Udhaari)"]
-        PLAN_CTRL["planController\n(Custom Gym Membership Tiers)"]
-        PORTAL_CTRL["publicPortalController\n(Member Digital Pass & UPI Pay)"]
-        AI_CTRL["aiDietController\n(Gemini 2.5 Flash + Fallback Engine)"]
-        CRON["⏰ node-cron Engine\n(Midnight 12:00 AM Expiry Daemon)"]
-    end
+### 👥 2. Member Management
 
-    subgraph INTEGRATIONS ["External Services & Intelligence"]
-        GMAIL["📧 Nodemailer SMTP\n(Dark-Themed HTML OTP)"]
-        GEMINI["🧠 Google Gemini AI\n(generativelanguage.googleapis.com)"]
-        WHATSAPP["💬 WhatsApp Deep-Link Engine\n(wa.me / url_launcher)"]
-        UPI["💳 Unified Payments Interface (UPI)\n(Dynamic QR & Deep-Links)"]
-    end
+- Add and manage member records.
+- Search and filter members.
+- Maintain membership-related information.
+- Access member details from the dashboard.
 
-    subgraph DATABASE ["Persistent Storage Layer"]
-        ATLAS[("🍃 MongoDB Atlas / Local MongoDB\n(Gyms, Plans, Members, Payments)")]
-    end
+### 🎟️ 3. Membership Management
 
-    %% Client requests
-    WEB --> CORS
-    MOBILE --> CORS
-    PUBLIC --> CORS
+- Organize membership packages.
+- Manage membership duration and expiry information.
+- Track renewal requirements.
+- Help identify memberships that need attention.
 
-    CORS --> HELMET
-    HELMET --> SANITIZE
-    SANITIZE --> RATELIMIT
+### 💰 4. Payment & Pending Fee Tracking
 
-    %% Protected vs Public Routing
-    RATELIMIT -->|Protected Routes| JWT_AUTH
-    RATELIMIT -->|Public Routes /api/public| PORTAL_CTRL
+- Record membership payment information.
+- Track paid and outstanding fees.
+- Monitor pending dues, also known as *Udhaari*.
+- Keep payment records organized for follow-up.
 
-    JWT_AUTH --> AUTH_CTRL
-    JWT_AUTH --> DASH_CTRL
-    JWT_AUTH --> MEM_CTRL
-    JWT_AUTH --> PLAN_CTRL
-    JWT_AUTH --> AI_CTRL
+### 💬 5. WhatsApp Reminder Support
 
-    %% External triggers
-    AUTH_CTRL --> GMAIL
-    AI_CTRL --> GEMINI
-    MEM_CTRL -.-> WHATSAPP
-    PORTAL_CTRL -.-> UPI
+- Generate pre-filled WhatsApp messages.
+- Prepare reminders for membership expiry.
+- Help gym owners follow up on pending payments.
 
-    %% Cron Trigger
-    CRON -->|Midnight Sync| ATLAS
+*Reminder delivery depends on the implemented WhatsApp integration and the owner's action.*
 
-    %% Database Operations
-    AUTH_CTRL --> ATLAS
-    DASH_CTRL --> ATLAS
-    MEM_CTRL --> ATLAS
-    PLAN_CTRL --> ATLAS
-    PORTAL_CTRL --> ATLAS
-    AI_CTRL --> ATLAS
+### ⏰ 6. Automated Membership Expiry Tracking
+
+- Use scheduled background tasks to check membership dates.
+- Update membership statuses according to expiry rules.
+- Reduce the need for manual status updates.
+
+### 🔐 7. Authentication & Email OTP Verification
+
+- JWT-based authentication for gym-owner access.
+- Email OTP verification during registration.
+- Protected access to authenticated functionality.
+
+### 🤖 8. AI-Powered Diet Planner
+
+- Integrate Google Gemini for AI-generated diet suggestions.
+- Support personalized Indian diet recommendations.
+- Provide an additional fitness-support feature within the platform.
+
+*AI-generated suggestions are informational and should not replace professional medical or nutritional advice.*
+
+### 🧑‍💻 9. Member Portal
+
+- Allow members to check relevant membership details.
+- Provide a convenient way to access membership information without relying entirely on the gym owner.
+
+### ☁️ 10. Cloud Database Integration
+
+- Use MongoDB Atlas for cloud-based data storage.
+- Use Mongoose for schema definitions and database operations.
+- Organize application data into manageable models.
+
+---
+
+## 🛠️ Technology Stack
+
+| Technology | Purpose |
+|---|---|
+| React.js | Building the frontend user interface |
+| Vite | Frontend development server and build tooling |
+| Tailwind CSS | Responsive UI styling |
+| Node.js | JavaScript runtime for the backend |
+| Express.js | REST API and server-side routing |
+| MongoDB Atlas | Cloud database |
+| Mongoose | Database schemas, validation, and queries |
+| JSON Web Token (JWT) | Authentication |
+| Nodemailer | Email delivery and OTP verification |
+| Node-cron | Scheduled background tasks |
+| Google Gemini API | AI-powered diet suggestions |
+
+---
+
+## 🏗️ Application Architecture
+
+GymFlow follows a client-server architecture using the MERN stack.
+
+```text
+                    ┌──────────────────┐
+                    │      USERS       │
+                    │ Gym Owners       │
+                    │ Gym Members      │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                 ┌─────────────────────┐
+                 │    React + Vite     │
+                 │  Tailwind CSS UI    │
+                 └──────────┬──────────┘
+                            │
+                       HTTP / REST
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │   Node.js + Express │
+                 │     REST API        │
+                 └──────────┬──────────┘
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+             ▼              ▼              ▼
+      ┌────────────┐  ┌────────────┐  ┌────────────┐
+      │  MongoDB   │  │ JWT Auth & │  │ Gemini AI  │
+      │   Atlas    │  │ Email OTP  │  │    API     │
+      └────────────┘  └────────────┘  └────────────┘
+                            │
+                            ▼
+                  ┌──────────────────┐
+                  │  Node-cron Jobs  │
+                  │ Expiry Tracking  │
+                  └──────────────────┘
 ```
 
+### 🔄 How the Application Works
+
+1. A user interacts with the React frontend.
+2. The frontend sends HTTP requests to the Express backend.
+3. Backend routes and controllers process incoming requests.
+4. Mongoose communicates with MongoDB to read or update data.
+5. Authentication middleware protects applicable endpoints.
+6. External services, such as email delivery and Gemini AI, handle their respective tasks.
+7. Scheduled jobs check membership expiry according to configured rules.
+8. The backend returns responses that the frontend displays to the user.
+
+The exact execution flow depends on the implementation in the source code.
+
 ---
 
-## 🗄️ Database Schema Overview
+## 📂 Project Structure
 
-```mermaid
-erDiagram
-    GYM ||--o{ PLAN : creates
-    GYM ||--o{ MEMBER : owns
-    GYM ||--o{ PAYMENT : collects
-    MEMBER ||--o{ PAYMENT : generates
-    PLAN ||--o{ MEMBER : assigns
-
-    GYM {
-        ObjectId _id PK
-        string gymName
-        string ownerName
-        string phone UK
-        string email UK
-        string password
-        string upiId
-        string address
-        string upiQrCodeUrl
-        boolean isVerified
-        string otpCode
-        Date otpExpiresAt
-        boolean isDemo
-    }
-
-    PLAN {
-        ObjectId _id PK
-        ObjectId gymId FK
-        string planName
-        number durationInDays
-        number price
-        boolean isActive
-    }
-
-    MEMBER {
-        ObjectId _id PK
-        ObjectId gymId FK
-        string name
-        string phone
-        string gender
-        ObjectId currentPlan FK
-        string planName
-        Date startDate
-        Date endDate
-        number paidAmount
-        number dueAmount
-        string status
-        object aiDietPlan
-        object aiDietCache
-    }
-
-    PAYMENT {
-        ObjectId _id PK
-        ObjectId gymId FK
-        ObjectId memberId FK
-        number amount
-        string paymentMode
-        Date paymentDate
-        string remarks
-    }
+```text
+gymflow-saas/
+│
+├── backend/
+│   ├── config/          # Configuration and database setup
+│   ├── controllers/     # Request-handling logic
+│   ├── middlewares/     # Authentication and request middleware
+│   ├── models/          # Mongoose data models
+│   ├── routes/          # API route definitions
+│   ├── utils/           # Shared utilities
+│   ├── seed.js          # Database seed script, if configured
+│   ├── server.js        # Backend entry point
+│   ├── package.json
+│   └── .env             # Local environment variables (not committed)
+│
+├── web-frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api/         # API communication
+│   │   ├── components/  # Reusable UI components
+│   │   └── pages/       # Application pages
+│   ├── package.json
+│   └── vite.config.js
+│
+├── .gitignore
+└── README.md
 ```
 
-### 1. `Gym` Collection
-| Field | Type | Modifiers / Constraints | Description |
-|---|---|---|---|
-| `_id` | ObjectId | Primary Key | Unique Gym Tenant Identifier |
-| `gymName` | String | Required, Trim | Registered Business Name |
-| `ownerName` | String | Required, Trim | Name of the Gym Owner / Manager |
-| `phone` | String | Required, Unique, Trim | 10-digit mobile contact |
-| `email` | String | Required, Unique, Lowercase | Login and OTP recipient email |
-| `password` | String | Required | Salted bcrypt hash |
-| `upiId` | String | Default: `ironparadise@okaxis` | VPA handle for receiving fees |
-| `upiQrCodeUrl` | String | Base64 / Remote URL | Uploaded GPay/PhonePe scanner image |
-| `isVerified` | Boolean | Default: `false` | Activated after 6-digit email OTP verification |
-| `otpCode` | String | Optional | Ephemeral 6-digit verification token |
-| `otpExpiresAt` | Date | Optional | 10-minute expiry timestamp |
-| `isDemo` | Boolean | Default: `false` | Identifies pre-seeded demo gym |
-
-### 2. `Plan` Collection
-| Field | Type | Modifiers / Constraints | Description |
-|---|---|---|---|
-| `_id` | ObjectId | Primary Key | Unique Plan ID |
-| `gymId` | ObjectId | Ref: `Gym`, Index | Multi-tenant tenant identifier |
-| `planName` | String | Required, Trim | e.g. "1 Month", "3 Months", "1 Year Annual" |
-| `durationInDays` | Number | Required, Default: `30` | Duration used for auto-computing `endDate` |
-| `price` | Number | Required, Min: `0` | Base fee in Indian Rupees (₹) |
-| `isActive` | Boolean | Default: `true` | Active status toggle |
-
-### 3. `Member` Collection
-| Field | Type | Modifiers / Constraints | Description |
-|---|---|---|---|
-| `_id` | ObjectId | Primary Key | Unique Member Record |
-| `gymId` | ObjectId | Ref: `Gym`, Index | Tenant owner reference |
-| `name` | String | Required, Trim | Member full name |
-| `phone` | String | Required, Trim, Index | 10-digit mobile contact number |
-| `gender` | String | Enum: `['Male', 'Female', 'Other']` | Member gender |
-| `currentPlan` | ObjectId | Ref: `Plan`, Required | Assigned membership tier |
-| `planName` | String | Default: `'1 Month General'` | Cached plan title |
-| `startDate` | Date | Default: `Date.now` | Enrollment or renewal start date |
-| `endDate` | Date | Required, Index | Calculated expiration date |
-| `paidAmount` | Number | Default: `0`, Min: `0` | Cumulative amount paid (₹) |
-| `dueAmount` | Number | Default: `0`, Min: `0` | Outstanding pending dues (*Udhaari*) |
-| `status` | String | Enum: `['Active', 'Expiring_Soon', 'Expired']` | Current membership state |
-| `aiDietPlan` | Object | `{ goal, dietType, generatedPlan, lastUpdated }` | Cached 7-day Indian gym diet |
-| `aiDietCache` | Object | `{ goal, dietaryPreference, calories, dietText, generatedAt }` | Internal AI caching block |
-
-> **🚀 Critical Performance Index:**  
-> `MemberSchema.index({ gymId: 1, status: 1, endDate: 1 });`  
-> Enables lightning-fast aggregate lookups across large member sets without disk-sort penalties.
-
-### 4. `Payment` Collection
-| Field | Type | Modifiers / Constraints | Description |
-|---|---|---|---|
-| `_id` | ObjectId | Primary Key | Unique Payment Receipt ID |
-| `gymId` | ObjectId | Ref: `Gym`, Index | Tenant identifier |
-| `memberId` | ObjectId | Ref: `Member`, Index | Member reference |
-| `amount` | Number | Required, Min: `0` | Transaction value (₹) |
-| `paymentMode` | String | Enum: `['UPI', 'Cash']` | Mode of settlement |
-| `paymentDate` | Date | Default: `Date.now` | Payment timestamp |
-| `remarks` | String | Optional | Audit note (e.g., "Registration fee", "Udhaari clearance") |
+*This structure reflects the project layout described above. Adjust it if your actual repository contains additional folders or different filenames.*
 
 ---
 
-## 📡 Complete REST API Reference
+## ⚙️ Getting Started
 
-### 🔐 Authentication (`/api/auth`)
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/api/auth/register` | None (Rate Limited) | **Step 1:** Validate details, create unverified gym, hash password, send 6-digit HTML email OTP via Nodemailer. |
-| `POST` | `/api/auth/verify-otp` | None (Rate Limited) | **Step 2:** Verify 6-digit code, activate gym (`isVerified=true`), seed default plans, issue 30-day JWT. |
-| `POST` | `/api/auth/resend-otp` | None (Rate Limited) | Resend fresh 6-digit verification code with renewed 10-minute validity. |
-| `POST` | `/api/auth/login` | None (Rate Limited) | Authenticate with email/password; returns JWT and gym profile. |
-| `POST` | `/api/auth/demo-login` | None | **⚡ 1-Click Demo Login:** Creates or loads "Iron Paradise Fitness" with 20 Indian members. |
-| `GET` | `/api/auth/me` | Bearer JWT | Returns profile of the currently logged-in gym owner. |
-| `PUT` | `/api/auth/profile` | Bearer JWT | Update gym name, owner name, phone, UPI ID, address, password, or upload UPI QR scanner image. |
+Follow these steps to run GymFlow locally.
 
-### 📊 Dashboard & Analytics (`/api/dashboard`)
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/dashboard/stats` | Bearer JWT | Returns 4 KPIs (`activeCount`, `expiringSoonCount`, `expiredCount`, `totalPendingDues`), monthly revenue, and prioritized lists. |
+### Prerequisites
 
-### 🏋️‍♂️ Member Management (`/api/members`)
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/members` | Bearer JWT | List members with search query (`?search=`), status filter (`?filter=Active\|Expiring_Soon\|Expired\|Udhaari`), and sort (`?sort=`). |
-| `POST` | `/api/members` | Bearer JWT | **10-Second Rapid Registration:** Auto-computes `endDate`, determines initial `dueAmount`, and creates a `Payment` record if paid > 0. |
-| `PUT / POST`| `/api/members/:id/renew` | Bearer JWT | **1-Click Renewal:** Extends expiry from existing date (if active) or today (if expired), adjusts due amount, and logs payment. |
-| `PUT / POST`| `/api/members/:id/clear-due` | Bearer JWT | **Clear Udhaari:** Deducts amount from member's `dueAmount`, adds to `paidAmount`, and logs a `Payment` entry. |
-| `DELETE` | `/api/members/:id` | Bearer JWT | Permanently removes member and cascades payment history deletion. |
-| `POST` | `/api/members/:id/ai-diet` | Bearer JWT | Generate or re-generate localized Indian gym diet plan via Gemini AI. |
+Install the following:
 
-### 📋 Membership Plans (`/api/plans`)
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/plans` | Bearer JWT | Fetch all active membership tiers configured for the tenant. |
-| `POST` | `/api/plans` | Bearer JWT | Create a custom membership plan (`planName`, `durationInDays`, `price`). |
-| `PUT` | `/api/plans/:id` | Bearer JWT | Update plan title, pricing, or duration. |
-| `DELETE` | `/api/plans/:id` | Bearer JWT | Soft/Hard remove membership tier for this gym. |
+- [Node.js](https://nodejs.org/)
+- npm
+- [MongoDB Atlas](https://www.mongodb.com/atlas) account or a compatible MongoDB instance
+- [Google AI Studio](https://aistudio.google.com/) API key for Gemini functionality
+- Git
 
-### 🌐 Public Member Portal (`/api/public`)
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `GET` | `/api/public/member/:phone` | None (Public) | Lookup membership status, days left, receipt history, and dynamic UPI pay link by 10-digit mobile number. |
-| `POST` | `/api/public/member/:id/diet` | None (Public) | Fetch cached 7-day Indian diet plan or generate a fresh one via Gemini 2.5 Flash if cache has expired (> 7 days). |
+### 1. Clone the Repository
 
----
-
-## 🚀 Local Installation & Environment Setup
-
-### 📋 Prerequisites
-- **Node.js:** v18.x or v20.x installed
-- **npm:** v9.x or higher
-- **MongoDB:** MongoDB Atlas connection URI or local MongoDB daemon running on `mongodb://localhost:27017`
-- **Flutter SDK (Optional for mobile):** v3.16.x or higher
-
----
-
-### Step 1: Clone Repository & Setup Backend
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/gym_sasapp.git
-cd gym_sasapp/backend
+git clone https://github.com/Sanjusende/gymflow-saas.git
+cd gymflow-saas
+```
 
-# Install backend dependencies
+### 2. Configure the Backend
+
+```bash
+cd backend
 npm install
 ```
 
-#### Backend Environment Variables Configuration (`/backend/.env`)
-Create a `.env` file inside `/backend` modeled on the template below:
+Create a `.env` file inside the `backend/` directory.
 
-| Variable | Required | Example Value | Description |
-|---|---|---|---|
-| `PORT` | Optional | `5000` | HTTP port for the Express backend API |
-| `MONGODB_URI` | **Required** | `mongodb://127.0.0.1:27017/gymflow_db` | MongoDB Atlas cluster or local URI |
-| `JWT_SECRET` | **Required** | `gymflow_super_secret_jwt_key_2026_fitness_saas` | Cryptographic secret for signing tokens |
-| `GEMINI_API_KEY` | Optional | `AIzaSyD...` | Google Gemini API key for Indian diet generation |
-| `NODE_ENV` | Optional | `development` | Environment mode (`development` or `production`) |
-| `CLIENT_URL` | Optional | `http://localhost:5173` | Allowed frontend origin for CORS |
-| `EMAIL_USER` | Optional | `yourgymflow@gmail.com` | Gmail address for dispatching registration OTPs |
-| `EMAIL_PASS` | Optional | `abcd efgh ijkl mnop` | Google 16-character App Password |
-
-```bash
-# Optional: Seed 20 realistic Indian members into demo gym
-node seed.js
-
-# Start the Backend Server (with hot reloading via nodemon)
-npm run dev
-# Server will run at http://localhost:5000
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_secure_jwt_secret
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_email_app_password
+GEMINI_API_KEY=your_gemini_api_key
+NODE_ENV=development
 ```
 
----
+Replace each placeholder with your own configuration.
 
-### Step 2: Setup & Run React Web Frontend
-Open a new terminal window:
+**Important:** Use an email provider's appropriate SMTP credentials or app password. Do not use your normal account password where an app password or other secure credential is required.
+
+Start the backend:
+
 ```bash
-cd gym_sasapp/web-frontend
+npm run dev
+```
 
-# Install dependencies
+If the `dev` script is not configured in your backend `package.json`, use the start command defined by your project.
+
+### 3. Configure the Frontend
+
+Open a new terminal from the project root:
+
+```bash
+cd web-frontend
 npm install
-
-# Start Vite Development Server
 npm run dev
-# Web app will be accessible at http://localhost:5173
 ```
+
+Open the local URL printed by Vite in your terminal.
+
+### 4. Verify the Application
+
+- Confirm that the backend starts without errors.
+- Confirm that the database connection succeeds.
+- Open the frontend in your browser.
+- Test registration and login.
+- Check the member and membership screens.
+- Test payment tracking and reminders.
+- Test Gemini functionality after configuring the API key.
+
+Some features may require additional configuration or valid test data.
 
 ---
 
-### Step 3: Setup & Run Flutter Mobile App (Android / iOS)
-Open a new terminal window:
-```bash
-cd gym_sasapp/flutter_app
+## 🔑 Environment Variables
 
-# Fetch Flutter dependencies
-flutter pub get
-
-# Check connected physical device or emulator
-flutter devices
-
-# Launch the app
-flutter run
-```
-
----
-
-## 💡 Technology Stack Summary
-
-| Domain | Technology / Library | Purpose |
+| Variable | Description | Required for |
 |---|---|---|
-| **Backend Runtime** | Node.js & Express.js | High-throughput, asynchronous RESTful API |
-| **Database** | MongoDB Atlas & Mongoose | Flexible document schema with compound indexing |
-| **Authentication** | JSON Web Tokens (JWT) & bcryptjs | Stateless, multi-tenant session verification |
-| **Email Service** | Nodemailer (Gmail SMTP) | Automated dark-mode HTML verification OTP emails |
-| **Artificial Intelligence** | Google Gemini 2.5 Flash API | Hyper-localized Indian sports nutrition generator |
-| **Task Scheduler** | node-cron | Automated midnight membership status synchronization |
-| **Web Frontend** | React.js 18, Vite, Lucide Icons | Responsive SPA with glassmorphism & neon aesthetics |
-| **Styling** | Vanilla Tailwind CSS (Dark Slate Theme) | Responsive UI with custom utility tokens |
-| **Mobile App** | Flutter & Dart (Dio, Provider, Url Launcher) | Native Android & iOS cross-platform application |
-| **Messaging** | WhatsApp Deep-Linking (`wa.me`) | Zero-cost Hinglish automated fee reminder engine |
+| `PORT` | Port used by the backend server | Backend |
+| `MONGO_URI` | MongoDB connection string | Database |
+| `JWT_SECRET` | Secret used to sign JWTs | Authentication |
+| `EMAIL_USER` | Email sender account | OTP emails |
+| `EMAIL_PASS` | SMTP credential or email app password | OTP emails |
+| `GEMINI_API_KEY` | Google Gemini API key | AI diet planner |
+| `NODE_ENV` | Runtime environment | Configuration |
+
+### 🔒 Protect Your Credentials
+
+- Never commit `.env` files to GitHub.
+- Add environment files to `.gitignore`.
+- Never expose backend secrets in frontend environment variables.
+- Use strong secrets and rotate credentials if they are accidentally exposed.
+- Keep API keys on the server whenever possible.
 
 ---
 
+## 🔌 Application Modules
+
+The backend is organized around these functional areas:
+
+| Module | Responsibility |
+|---|---|
+| Authentication | Registration, login, and access control |
+| Email Verification | OTP delivery and account verification |
+| Dashboard | Gym statistics and summary information |
+| Members | Member record management |
+| Membership Plans | Membership package management |
+| Payments | Payment records and pending dues |
+| Member Portal | Member-facing membership information |
+| AI Diet Planner | Gemini-powered diet suggestions |
+| Scheduled Tasks | Membership expiry checks |
+
+For the exact API paths, HTTP methods, and request formats, refer to the backend route files.
+
+---
+
+## 🔐 Security Best Practices
+
+Security is important when an application manages personal information and payment records.
+
+Recommended practices include:
+
+- Validate user input on the server.
+- Authenticate protected API requests.
+- Enforce authorization at the backend, not only in the frontend.
+- Ensure each gym owner can access only their permitted records.
+- Hash passwords securely using bcrypt or an appropriate password-hashing algorithm.
+- Protect OTP verification and login endpoints against abuse.
+- Configure CORS for trusted frontend origins.
+- Apply suitable rate limits to sensitive endpoints.
+- Avoid returning secrets or internal error details in API responses.
+- Validate environment variables during startup.
+- Use HTTPS in production.
+
+These are recommended security practices; verify which are already implemented in the codebase before describing them as existing features.
+
+---
+
+## 🗺️ Future Enhancements
+
+Potential improvements for future versions include:
+
+- [ ] Online payment gateway integration.
+- [ ] Detailed revenue and membership analytics.
+- [ ] PDF invoices and payment receipts.
+- [ ] Automated email and WhatsApp notification workflows.
+- [ ] Trainer scheduling and workout-plan management.
+- [ ] Attendance tracking using QR codes.
+- [ ] More detailed member progress tracking.
+- [ ] Automated tests for important API endpoints.
+- [ ] CI/CD pipeline for deployment.
+- [ ] Role-based access for gym owners, trainers, and staff.
+
+These are proposed enhancements, not claims about currently implemented functionality.
+
+---
+
+## 👨‍💻 Author
+
+**Sanjay Sende**
+
+B.Tech Computer Science Engineering | Full-Stack Developer
+
+- 🌐 **Portfolio:** [sanjay-sportfolio.vercel.app](https://sanjay-sportfolio.vercel.app/)
+- 💻 **GitHub:** [github.com/Sanjusende](https://github.com/Sanjusende)
+- 🔗 **LinkedIn:** [Visit my LinkedIn profile](https://www.linkedin.com/)
+
+---
+
+## ⭐ Support
+
+If you find this project useful or interesting, consider giving the repository a ⭐ on GitHub.
+
 <div align="center">
 
-**Built with passion for Indian fitness entrepreneurs.**  
-⭐ Star this repository if GymFlow inspires your SaaS architecture!
+### Built with ❤️ using the MERN Stack
+
+*Making everyday gym management simpler and smarter.*
 
 </div>
-#   G Y M _ F l o w  
- 
