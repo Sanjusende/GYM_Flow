@@ -117,8 +117,8 @@ const RenewModal = ({
   const isCurrentlyExpired = currentEndDate < new Date();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-      <div className="glass-panel-neon w-full max-w-md rounded-2xl p-6 relative overflow-hidden text-slate-100 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
+      <div className="glass-panel-neon w-full max-w-md rounded-2xl p-4 sm:p-6 relative max-h-[92vh] overflow-y-auto text-slate-100 shadow-2xl my-auto">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-dark-700">
           <div>

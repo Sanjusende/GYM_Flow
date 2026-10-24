@@ -44,34 +44,34 @@ const StatCard = ({
   return (
     <div
       onClick={onClick}
-      className={`glass-panel p-5 rounded-2xl transition-all duration-300 ${style.border} ${
+      className={`glass-panel p-4 sm:p-5 rounded-2xl transition-all duration-300 ${style.border} ${
         onClick ? 'cursor-pointer hover:-translate-y-1' : ''
       } relative overflow-hidden group`}
     >
       {/* Background radial highlight */}
       <div className="absolute -top-12 -right-12 w-28 h-28 bg-white/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500 pointer-events-none" />
 
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <div className="flex items-center justify-between mb-2 sm:mb-3">
+        <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 truncate max-w-[120px]">
           {title}
         </span>
-        <div className={`p-2.5 rounded-xl ${style.iconBg}`}>
-          <Icon className="h-5 w-5" />
+        <div className={`p-2 sm:p-2.5 rounded-xl ${style.iconBg} shrink-0`}>
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
       </div>
 
       <div className="flex items-baseline gap-2">
-        <span className={`text-3xl font-black tracking-tight font-['Outfit'] ${style.valueColor}`}>
+        <span className={`text-2xl sm:text-3xl font-black tracking-tight font-['Outfit'] truncate ${style.valueColor}`}>
           {value}
         </span>
       </div>
 
       {subtext && (
-        <div className="mt-3 flex items-center justify-between text-xs text-slate-400 border-t border-dark-700/60 pt-2.5">
-          <span>{subtext}</span>
+        <div className="mt-2.5 sm:mt-3 flex items-center justify-between text-[11px] sm:text-xs text-slate-400 border-t border-dark-700/60 pt-2 sm:pt-2.5">
+          <span className="truncate">{subtext}</span>
           {onClick && (
-            <span className="text-[11px] font-semibold text-slate-300 group-hover:text-neon-green transition-colors flex items-center gap-1">
-              View List →
+            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-300 group-hover:text-neon-green transition-colors flex items-center gap-0.5 shrink-0 ml-1">
+              View →
             </span>
           )}
         </div>

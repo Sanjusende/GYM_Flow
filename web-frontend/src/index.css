@@ -68,6 +68,15 @@
   background: #10B981;
 }
 
+/* No Scrollbar Utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Print Styling */
 @media print {
   body {

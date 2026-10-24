@@ -101,37 +101,37 @@ const MemberPortal = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-16 animate-fade-in w-full px-2 sm:px-0">
       {/* Header Banner */}
-      <div className="text-center py-6 no-print">
-        <div className="inline-flex p-3 rounded-2xl bg-neon-green/10 text-neon-green border border-neon-green/30 mb-3">
-          <Dumbbell className="h-7 w-7" />
+      <div className="text-center py-4 sm:py-6 no-print">
+        <div className="inline-flex p-2.5 sm:p-3 rounded-2xl bg-neon-green/10 text-neon-green border border-neon-green/30 mb-2 sm:mb-3">
+          <Dumbbell className="h-6 w-6 sm:h-7 sm:w-7" />
         </div>
-        <h1 className="text-3xl font-black text-white font-['Outfit'] tracking-tight">
-          Public Member Self-Service Portal
+        <h1 className="text-2xl sm:text-3xl font-black text-white font-['Outfit'] tracking-tight">
+          Member Self-Service Portal
         </h1>
-        <p className="text-sm text-slate-400 mt-1 max-w-md mx-auto">
+        <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-md mx-auto px-2">
           Enter your 10-digit registered phone number to check membership validity, fee receipts, and generate your 7-day Indian Diet Chart.
         </p>
 
         {/* 10-Digit Phone Search Form */}
-        <form onSubmit={handleSearch} className="mt-6 max-w-md mx-auto flex items-center gap-2">
+        <form onSubmit={handleSearch} className="mt-4 sm:mt-6 max-w-md mx-auto flex items-center gap-2">
           <div className="relative flex-1">
             <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
             <input
               type="tel"
               required
-              placeholder="Enter 10-digit Phone No. (e.g. 9820111223)"
+              placeholder="Enter 10-digit Phone No."
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl text-sm glass-input font-medium"
+              className="w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-xl text-sm glass-input font-medium"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="px-5 py-3 rounded-xl text-sm font-bold bg-neon-green hover:bg-neon-glow text-dark-950 shadow-neon-green flex items-center gap-2 transition-all active:scale-95 disabled:opacity-50"
+            className="px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold bg-neon-green hover:bg-neon-glow text-dark-950 shadow-neon-green flex items-center gap-1.5 sm:gap-2 transition-all active:scale-95 disabled:opacity-50 shrink-0"
           >
             <Search className="h-4 w-4" />
-            {loading ? 'Checking...' : 'Check'}
+            <span>{loading ? '...' : 'Check'}</span>
           </button>
         </form>
 
@@ -146,16 +146,16 @@ const MemberPortal = () => {
       {member && (
         <div className="space-y-6">
           {/* Digital Membership Pass Card */}
-          <div className="glass-panel-neon p-6 sm:p-8 rounded-3xl relative overflow-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-dark-700/80 pb-6">
+          <div className="glass-panel-neon p-4 sm:p-8 rounded-2xl sm:rounded-3xl relative overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-dark-700/80 pb-4 sm:pb-6">
               <div>
-                <span className="text-[11px] font-bold text-neon-green uppercase tracking-wider">
+                <span className="text-[10px] sm:text-[11px] font-bold text-neon-green uppercase tracking-wider">
                   {gym?.gymName || 'Iron Paradise Fitness'}
                 </span>
-                <h2 className="text-2xl font-black text-white font-['Outfit'] mt-0.5">
+                <h2 className="text-xl sm:text-2xl font-black text-white font-['Outfit'] mt-0.5">
                   {member.name}
                 </h2>
-                <div className="flex items-center gap-3 text-xs text-slate-400 mt-1">
+                <div className="flex items-center gap-2 sm:gap-3 text-xs text-slate-400 mt-1 flex-wrap">
                   <span>📱 {member.phone}</span>
                   <span>•</span>
                   <span>Plan: {member.planName}</span>
@@ -165,20 +165,20 @@ const MemberPortal = () => {
               {/* Status Badge */}
               <div className="self-start sm:self-auto">
                 {member.status === 'Active' && (
-                  <span className="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5">
-                    <CheckCircle2 className="h-4 w-4" />
-                    ACTIVE ({member.diffDays} Days Left)
+                  <span className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5">
+                    <CheckCircle2 className="h-3.5 w-3.5" />
+                    ACTIVE ({member.diffDays}d left)
                   </span>
                 )}
                 {member.status === 'Expiring_Soon' && (
-                  <span className="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center gap-1.5">
-                    <AlertTriangle className="h-4 w-4" />
-                    EXPIRING IN {member.diffDays} DAYS
+                  <span className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center gap-1.5">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    EXPIRING ({member.diffDays}d left)
                   </span>
                 )}
                 {member.status === 'Expired' && (
-                  <span className="px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center gap-1.5">
-                    <XCircle className="h-4 w-4" />
+                  <span className="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full text-xs font-extrabold bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center gap-1.5">
+                    <XCircle className="h-3.5 w-3.5" />
                     MEMBERSHIP EXPIRED
                   </span>
                 )}
@@ -186,10 +186,10 @@ const MemberPortal = () => {
             </div>
 
             {/* Validity Timeline */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-6 border-b border-dark-700/80">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 py-4 sm:py-6 border-b border-dark-700/80">
               <div>
-                <span className="text-[11px] font-semibold text-slate-400 uppercase">Started On</span>
-                <div className="text-base font-bold text-slate-200 mt-1">
+                <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase">Started On</span>
+                <div className="text-sm sm:text-base font-bold text-slate-200 mt-0.5">
                   {new Date(member.startDate).toLocaleDateString('en-IN', {
                     month: 'short',
                     day: 'numeric',
@@ -199,8 +199,8 @@ const MemberPortal = () => {
               </div>
 
               <div>
-                <span className="text-[11px] font-semibold text-slate-400 uppercase">Valid Until</span>
-                <div className="text-base font-bold text-neon-green mt-1">
+                <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase">Valid Until</span>
+                <div className="text-sm sm:text-base font-bold text-neon-green mt-0.5">
                   {new Date(member.endDate).toLocaleDateString('en-IN', {
                     month: 'short',
                     day: 'numeric',
@@ -209,16 +209,17 @@ const MemberPortal = () => {
                 </div>
               </div>
 
-              <div>
-                <span className="text-[11px] font-semibold text-slate-400 uppercase">
+              <div className="col-span-2 sm:col-span-1">
+                <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase">
                   Pending Udhaari (Due)
                 </span>
                 <div
-                  className={`text-base font-black mt-1 ${member.dueAmount > 0 ? 'text-rose-400' : 'text-emerald-400'
-                    }`}
+                  className={`text-sm sm:text-base font-black mt-0.5 ${
+                    member.dueAmount > 0 ? 'text-rose-400' : 'text-emerald-400'
+                  }`}
                 >
                   ₹{member.dueAmount}{' '}
-                  {member.dueAmount === 0 && <span className="text-xs font-medium">✓ Fully Cleared</span>}
+                  {member.dueAmount === 0 && <span className="text-xs font-medium text-emerald-400/80">✓ Cleared</span>}
                 </div>
               </div>
             </div>

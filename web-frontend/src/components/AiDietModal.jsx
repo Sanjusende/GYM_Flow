@@ -63,8 +63,8 @@ const AiDietModal = ({ isOpen, onClose, member, gym }) => {
   )}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="glass-panel-neon w-full max-w-2xl max-h-[90vh] flex flex-col rounded-2xl overflow-hidden text-slate-100 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
+      <div className="glass-panel-neon w-full max-w-2xl max-h-[92vh] flex flex-col rounded-2xl overflow-hidden text-slate-100 shadow-2xl my-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-dark-700/60 bg-dark-950/60">
           <div className="flex items-center gap-2.5">

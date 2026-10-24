@@ -89,7 +89,7 @@ const Plans = () => {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
         {plans.map((plan) => (
           <div
             key={plan._id}
@@ -125,8 +125,8 @@ const Plans = () => {
       </div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-          <div className="glass-panel-neon w-full max-w-md rounded-2xl p-6 text-slate-100 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
+          <div className="glass-panel-neon w-full max-w-md rounded-2xl p-4 sm:p-6 text-slate-100 shadow-2xl my-auto">
             <h2 className="text-lg font-extrabold tracking-tight font-['Outfit'] mb-1">
               Create Membership Plan
             </h2>

@@ -168,6 +168,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const forgotPassword = async (email) => {
+    try {
+      const res = await axiosInstance.post('/auth/forgot-password', { email });
+      return {
+        success: true,
+        message: res.data.message || 'Password reset OTP sent to your email.',
+        email: res.data.email,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Failed to request password reset OTP.',
+      };
+    }
+  };
+
+  const resetPassword = async (email, otp, newPassword) => {
+    try {
+      const res = await axiosInstance.post('/auth/reset-password', { email, otp, newPassword });
+      return {
+        success: true,
+        message: res.data.message || 'Password reset successfully!',
+      };
+    } catch (err) {
+      return {
+        success: false,
+        message: err.response?.data?.message || 'Failed to reset password.',
+      };
+    }
+  };
+
   const logout = () => {
     setToken(null);
     setGym(null);
@@ -186,6 +217,8 @@ export const AuthProvider = ({ children }) => {
         register,
         verifyOtp,
         resendOtp,
+        forgotPassword,
+        resetPassword,
         demoLogin,
         updateProfile,
         logout,

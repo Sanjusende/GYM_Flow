@@ -105,42 +105,42 @@ const Dashboard = ({
   return (
     <div className="space-y-6 pb-12 animate-fade-in">
       {/* Welcome Banner */}
-      <div className="glass-panel p-6 rounded-2xl border border-dark-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-dark-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-black tracking-tight text-white font-['Outfit']">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-white font-['Outfit']">
               {gym?.gymName || 'Iron Paradise Fitness'} 👋
             </h1>
-            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-neon-green/20 text-neon-green border border-neon-green/30">
-              Live Control Panel
+            <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full bg-neon-green/20 text-neon-green border border-neon-green/30 shrink-0">
+              Live
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
             Owner: <span className="text-slate-200 font-semibold">{gym?.ownerName || gym?.name || 'Admin'}</span> • UPI: <span className="text-neon-cyan font-mono">{gym?.upiId || 'gym@upi'}</span>
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <button
             onClick={() => onNavigateToMembers('Udhaari')}
-            className="px-3.5 py-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500 text-amber-400 hover:text-dark-950 border border-amber-500/30 transition-all flex items-center gap-1.5"
+            className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500 text-amber-400 hover:text-dark-950 border border-amber-500/30 transition-all flex items-center justify-center gap-1.5"
           >
-            <IndianRupee className="h-4 w-4" />
-            Udhaari Book (₹{data.totalPendingDues})
+            <IndianRupee className="h-3.5 w-3.5" />
+            <span>Udhaari (₹{data.totalPendingDues})</span>
           </button>
 
           <button
             onClick={onOpenAddModal}
-            className="px-4 py-2.5 rounded-xl text-xs font-bold bg-neon-green hover:bg-neon-glow text-dark-950 shadow-neon-green flex items-center gap-1.5 transition-all active:scale-95"
+            className="flex-1 sm:flex-initial px-3.5 sm:px-4 py-2.5 rounded-xl text-xs font-bold bg-neon-green hover:bg-neon-glow text-dark-950 shadow-neon-green flex items-center justify-center gap-1.5 transition-all active:scale-95"
           >
             <PlusCircle className="h-4 w-4" />
-            Add Member (10s)
+            <span>Add Member</span>
           </button>
         </div>
       </div>
 
-      {/* Top 5 KPI StatCards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {/* Top 5 KPI StatCards Grid (2-column on mobile, 5 on desktop) */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-4">
         <StatCard
           title="Active Members"
           value={data.activeCount}
@@ -153,7 +153,7 @@ const Dashboard = ({
         <StatCard
           title="Expiring (5d)"
           value={data.expiringSoonCount}
-          subtext="Needs Renewal Followup"
+          subtext="Needs Followup"
           icon={AlertTriangle}
           variant="amber"
           onClick={() => setActiveTab('EXPIRING')}
@@ -162,7 +162,7 @@ const Dashboard = ({
         <StatCard
           title="Expired"
           value={data.expiredCount}
-          subtext="Win-back Candidates"
+          subtext="Win-back List"
           icon={UserX}
           variant="rose"
           onClick={() => setActiveTab('EXPIRED')}
@@ -171,62 +171,67 @@ const Dashboard = ({
         <StatCard
           title="Total Udhaari"
           value={`₹${data.totalPendingDues}`}
-          subtext="Pending Unpaid Dues"
+          subtext="Pending Unpaid"
           icon={IndianRupee}
           variant="rose"
           onClick={() => setActiveTab('UDHAARI')}
         />
 
-        <StatCard
-          title="Month Collection"
-          value={`₹${data.monthlyRevenue}`}
-          subtext="Cash & UPI Revenue"
-          icon={TrendingUp}
-          variant="cyan"
-          onClick={() => { }}
-        />
+        <div className="col-span-2 lg:col-span-1">
+          <StatCard
+            title="Month Collection"
+            value={`₹${data.monthlyRevenue}`}
+            subtext="Cash & UPI Total"
+            icon={TrendingUp}
+            variant="cyan"
+            onClick={() => { }}
+          />
+        </div>
       </div>
 
       {/* 3 Alert Tabs (*Expiring Soon*, *Expired*, *Pending Udhaari*) */}
-      <div className="glass-panel p-6 rounded-2xl border border-dark-700 space-y-4">
+      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-dark-700 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-dark-700">
           <div>
-            <h2 className="text-base font-extrabold text-white font-['Outfit']">
+            <h2 className="text-sm sm:text-base font-extrabold text-white font-['Outfit']">
               Priority Member Action Center
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-[11px] sm:text-xs text-slate-400">
               1-Click WhatsApp follow-ups with pre-filled Hinglish messages & UPI ID
             </p>
           </div>
 
-          {/* Segmented Alert Tabs */}
-          <div className="flex items-center gap-1.5 bg-dark-900 p-1.5 rounded-xl border border-dark-700">
+          {/* Segmented Alert Tabs - Horizontally scrollable on mobile */}
+          <div className="flex items-center gap-1.5 bg-dark-900 p-1.5 rounded-xl border border-dark-700 overflow-x-auto no-scrollbar w-full sm:w-auto">
             <button
               onClick={() => setActiveTab('EXPIRING')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'EXPIRING'
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition-all ${
+                activeTab === 'EXPIRING'
                   ? 'bg-amber-500 text-dark-950 shadow'
                   : 'text-slate-400 hover:text-white'
-                }`}
+              }`}
             >
-              Expiring Soon ({data.expiringSoonMembers.length})
+              Expiring ({data.expiringSoonMembers.length})
             </button>
 
             <button
               onClick={() => setActiveTab('EXPIRED')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'EXPIRED'
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition-all ${
+                activeTab === 'EXPIRED'
                   ? 'bg-rose-500 text-white shadow'
                   : 'text-slate-400 hover:text-white'
-                }`}
+              }`}
             >
               Expired ({data.expiredMembers.length})
             </button>
 
             <button
               onClick={() => setActiveTab('UDHAARI')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'UDHAARI'
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap shrink-0 transition-all ${
+                activeTab === 'UDHAARI'
                   ? 'bg-cyan-500 text-dark-950 shadow'
                   : 'text-slate-400 hover:text-white'
-                }`}
+              }`}
             >
               Pending Udhaari ({data.pendingDueMembers.length})
             </button>
@@ -243,14 +248,14 @@ const Dashboard = ({
             currentMembersList.slice(0, 10).map((m) => (
               <div
                 key={m._id}
-                className="p-4 rounded-xl bg-dark-900 border border-dark-700/80 hover:border-dark-600 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors"
+                className="p-3.5 sm:p-4 rounded-xl bg-dark-900 border border-dark-700/80 hover:border-dark-600 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors"
               >
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-bold text-sm text-slate-100">{m.name}</span>
                     <span className="text-xs text-slate-400 font-mono">📱 {m.phone}</span>
                     {m.dueAmount > 0 && (
-                      <span className="text-[11px] font-black text-rose-400 bg-rose-500/15 px-2 py-0.5 rounded border border-rose-500/30">
+                      <span className="text-[10px] sm:text-[11px] font-black text-rose-400 bg-rose-500/15 px-2 py-0.5 rounded border border-rose-500/30">
                         ₹{m.dueAmount} Udhaari
                       </span>
                     )}
@@ -259,17 +264,17 @@ const Dashboard = ({
                     Plan: <span className="text-slate-300 font-medium">{m.planName}</span> •{' '}
                     {m.diffDays < 0 ? (
                       <span className="text-rose-400 font-semibold">
-                        Expired {Math.abs(m.diffDays)} days ago
+                        Expired {Math.abs(m.diffDays)}d ago
                       </span>
                     ) : (
                       <span className="text-amber-400 font-semibold">
-                        Expires in {m.diffDays} days ({new Date(m.endDate).toLocaleDateString('en-IN')})
+                        Expires in {m.diffDays}d ({new Date(m.endDate).toLocaleDateString('en-IN')})
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
                   {/* Zero-Cost 1-Click WhatsApp Button */}
                   <a
                     href={getWhatsAppReminderUrl(
@@ -278,16 +283,16 @@ const Dashboard = ({
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-dark-950 font-extrabold text-xs flex items-center gap-1.5 transition-all shadow-sm"
+                    className="flex-1 sm:flex-initial px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-dark-950 font-extrabold text-xs flex items-center justify-center gap-1.5 transition-all shadow-sm active:scale-95"
                   >
                     <MessageSquare className="h-3.5 w-3.5 fill-dark-950" />
-                    <span>WhatsApp Reminder</span>
+                    <span>WhatsApp</span>
                   </a>
 
                   {/* 1-Click Renew */}
                   <button
                     onClick={() => onOpenRenewModal(m)}
-                    className="p-2 rounded-xl bg-dark-800 hover:bg-neon-green/20 text-slate-300 hover:text-neon-green border border-dark-700 transition-colors text-xs"
+                    className="p-2 sm:p-2.5 rounded-xl bg-dark-800 hover:bg-neon-green/20 text-slate-300 hover:text-neon-green border border-dark-700 transition-colors text-xs shrink-0"
                     title="1-Click Renew"
                   >
                     <RefreshCw className="h-4 w-4" />
@@ -297,7 +302,7 @@ const Dashboard = ({
                   {m.dueAmount > 0 && (
                     <button
                       onClick={() => onOpenClearDueModal(m)}
-                      className="px-2.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-dark-950 font-bold text-xs"
+                      className="px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-dark-950 font-bold text-xs shrink-0"
                     >
                       Clear Due
                     </button>

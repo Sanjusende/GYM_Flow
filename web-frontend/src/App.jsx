@@ -114,8 +114,8 @@ export function App() {
         onOpenGymSettings={() => setIsGymSettingsOpen(true)}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-8 py-6">
+      {/* Main Content Area (extra bottom padding on mobile for fixed bottom bar) */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-8 pt-4 pb-24 md:pb-8">
         {activeTab === 'dashboard' && (
           <Dashboard
             gym={gym}

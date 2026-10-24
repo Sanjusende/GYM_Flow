@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import {
   Dumbbell,
   Zap,
@@ -31,6 +32,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [demoLoading, setDemoLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // OTP state
   const [otp, setOtp] = useState('');
@@ -406,9 +408,23 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Password <span className="text-neon-green">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-semibold text-slate-300">
+                    Password <span className="text-neon-green">*</span>
+                  </label>
+                  {!isRegister && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowForgotPassword(true);
+                        setError('');
+                      }}
+                      className="text-xs text-neon-green hover:underline font-semibold transition-colors"
+                    >
+                      Forgot password?
+                    </button>
+                  )}
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
                   <input
@@ -460,6 +476,17 @@ const Login = () => {
           <span>Multi-Tenant Encrypted • 100% Data Isolation</span>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+        initialEmail={email}
+        onSuccess={(resetEmail) => {
+          setEmail(resetEmail);
+          setPassword('');
+        }}
+      />
     </div>
   );
 };
