@@ -211,22 +211,6 @@ const Login = () => {
                 </span>
               </div>
 
-              {/* Demo / Testing OTP Quick Helper */}
-              <div
-                onClick={() => setOtp(devOtp || '123456')}
-                className="p-3 rounded-xl bg-dark-900 border border-neon-green/30 hover:border-neon-green cursor-pointer transition-all flex items-center justify-between group"
-                title="Click to autofill test OTP"
-              >
-                <div className="flex items-center gap-2 text-xs">
-                  <span className="text-neon-green font-bold">⚡ Demo Test OTP:</span>
-                  <span className="font-mono font-black text-white text-sm tracking-wider">
-                    {devOtp || '123456'}
-                  </span>
-                </div>
-                <span className="text-[11px] font-semibold text-slate-400 group-hover:text-neon-green transition-colors">
-                  Tap to Fill ↵
-                </span>
-              </div>
 
               <form onSubmit={handleVerifyOtp} className="space-y-4">
                 <div>
@@ -446,8 +430,8 @@ const Login = () => {
                 {loading
                   ? 'Processing...'
                   : isRegister
-                  ? 'Proceed to OTP Verification →'
-                  : 'Sign In to Dashboard'}
+                    ? 'Proceed to OTP Verification →'
+                    : 'Sign In to Dashboard'}
               </button>
             </form>
           )}

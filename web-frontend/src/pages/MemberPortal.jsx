@@ -49,7 +49,7 @@ const MemberPortal = () => {
       setMemberData(null);
       setError(
         err.response?.data?.message ||
-          'No gym membership found for this phone number. Please check with your gym reception.'
+        'No gym membership found for this phone number. Please check with your gym reception.'
       );
     } finally {
       setLoading(false);
@@ -214,9 +214,8 @@ const MemberPortal = () => {
                   Pending Udhaari (Due)
                 </span>
                 <div
-                  className={`text-base font-black mt-1 ${
-                    member.dueAmount > 0 ? 'text-rose-400' : 'text-emerald-400'
-                  }`}
+                  className={`text-base font-black mt-1 ${member.dueAmount > 0 ? 'text-rose-400' : 'text-emerald-400'
+                    }`}
                 >
                   ₹{member.dueAmount}{' '}
                   {member.dueAmount === 0 && <span className="text-xs font-medium">✓ Fully Cleared</span>}

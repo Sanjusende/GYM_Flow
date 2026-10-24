@@ -42,8 +42,8 @@ const Navbar = ({ activeTab, setActiveTab, onOpenAddModal }) => {
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'dashboard'
-                ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
-                : 'text-slate-300 hover:text-white hover:bg-dark-800'
+              ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
+              : 'text-slate-300 hover:text-white hover:bg-dark-800'
               }`}
           >
             <LayoutDashboard className="h-4 w-4" />
@@ -53,8 +53,8 @@ const Navbar = ({ activeTab, setActiveTab, onOpenAddModal }) => {
           <button
             onClick={() => setActiveTab('members')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'members'
-                ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
-                : 'text-slate-300 hover:text-white hover:bg-dark-800'
+              ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
+              : 'text-slate-300 hover:text-white hover:bg-dark-800'
               }`}
           >
             <Users className="h-4 w-4" />
@@ -64,8 +64,8 @@ const Navbar = ({ activeTab, setActiveTab, onOpenAddModal }) => {
           <button
             onClick={() => setActiveTab('plans')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'plans'
-                ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
-                : 'text-slate-300 hover:text-white hover:bg-dark-800'
+              ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
+              : 'text-slate-300 hover:text-white hover:bg-dark-800'
               }`}
           >
             <CreditCard className="h-4 w-4" />
@@ -75,8 +75,8 @@ const Navbar = ({ activeTab, setActiveTab, onOpenAddModal }) => {
           <button
             onClick={() => setActiveTab('portal')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === 'portal'
-                ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
-                : 'text-slate-300 hover:text-white hover:bg-dark-800'
+              ? 'bg-neon-green text-dark-950 font-semibold shadow-md'
+              : 'text-slate-300 hover:text-white hover:bg-dark-800'
               }`}
           >
             <UserCheck className="h-4 w-4" />
