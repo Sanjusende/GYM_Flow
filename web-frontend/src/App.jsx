@@ -10,6 +10,7 @@ import AddMemberModal from './components/AddMemberModal';
 import RenewModal from './components/RenewModal';
 import AiDietModal from './components/AiDietModal';
 import GymSettingsModal from './components/GymSettingsModal';
+import UpgradePlanModal from './components/UpgradePlanModal';
 import axiosInstance from './api/axiosInstance';
 
 export function App() {
@@ -20,6 +21,7 @@ export function App() {
   // Modals state
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isGymSettingsOpen, setIsGymSettingsOpen] = useState(false);
+  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
   const [renewTarget, setRenewTarget] = useState(null);
   const [renewMode, setRenewMode] = useState('renew');
   const [dietTarget, setDietTarget] = useState(null);
@@ -42,6 +44,12 @@ export function App() {
   useEffect(() => {
     fetchPlans();
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    const handleExpired = () => setIsUpgradeOpen(true);
+    window.addEventListener('gymflow:subscription-expired', handleExpired);
+    return () => window.removeEventListener('gymflow:subscription-expired', handleExpired);
+  }, []);
 
   if (loading) {
     return (
@@ -112,6 +120,7 @@ export function App() {
         setActiveTab={setActiveTab}
         onOpenAddModal={() => setIsAddOpen(true)}
         onOpenGymSettings={() => setIsGymSettingsOpen(true)}
+        onOpenUpgrade={() => setIsUpgradeOpen(true)}
       />
 
       {/* Main Content Area (extra bottom padding on mobile for fixed bottom bar) */}
@@ -186,6 +195,15 @@ export function App() {
       <GymSettingsModal
         isOpen={isGymSettingsOpen}
         onClose={() => setIsGymSettingsOpen(false)}
+      />
+
+      {/* Upgrade Plan Razorpay Modal */}
+      <UpgradePlanModal
+        isOpen={isUpgradeOpen}
+        onClose={() => setIsUpgradeOpen(false)}
+        onPaymentSuccess={() => {
+          fetchPlans();
+        }}
       />
     </div>
   );

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import StatCard from '../components/StatCard';
+import SubscriptionBanner from '../components/SubscriptionBanner';
+import UpgradePlanModal from '../components/UpgradePlanModal';
 import {
   Users,
   AlertTriangle,
@@ -10,6 +12,7 @@ import {
   MessageSquare,
   RefreshCw,
   PlusCircle,
+  Zap,
 } from 'lucide-react';
 
 const Dashboard = ({
@@ -19,6 +22,7 @@ const Dashboard = ({
   onOpenRenewModal,
   onOpenClearDueModal,
 }) => {
+  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
   const [data, setData] = useState({
     activeCount: 0,
     expiringSoonCount: 0,
@@ -52,6 +56,9 @@ const Dashboard = ({
       }
     } catch (err) {
       console.error('Failed to load dashboard data', err);
+      if (err.response?.status === 403) {
+        setIsUpgradeOpen(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -59,7 +66,16 @@ const Dashboard = ({
 
   useEffect(() => {
     fetchDashboardData();
-  }, []);
+
+    // Auto-open upgrade modal if subscription has expired
+    if (gym?.subscriptionStatus === 'expired') {
+      setIsUpgradeOpen(true);
+    }
+
+    const handleExpiredEvent = () => setIsUpgradeOpen(true);
+    window.addEventListener('gymflow:subscription-expired', handleExpiredEvent);
+    return () => window.removeEventListener('gymflow:subscription-expired', handleExpiredEvent);
+  }, [gym?.subscriptionStatus]);
 
   const getWhatsAppReminderUrl = (member, type) => {
     const cleanPhone = (member.phone || '').replace(/\D/g, '').slice(-10);
@@ -104,6 +120,9 @@ const Dashboard = ({
 
   return (
     <div className="space-y-6 pb-12 animate-fade-in">
+      {/* 30-Day Free Trial / Expired Subscription Banner */}
+      <SubscriptionBanner gym={gym} onOpenUpgrade={() => setIsUpgradeOpen(true)} />
+
       {/* Welcome Banner */}
       <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-dark-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -120,7 +139,15 @@ const Dashboard = ({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto flex-wrap">
+          <button
+            onClick={() => setIsUpgradeOpen(true)}
+            className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2.5 rounded-xl text-xs font-bold bg-neon-green/15 hover:bg-neon-green text-neon-green hover:text-dark-950 border border-neon-green/30 transition-all flex items-center justify-center gap-1.5"
+          >
+            <Zap className="h-3.5 w-3.5 fill-current" />
+            <span>{gym?.subscriptionStatus === 'active' ? 'Pro Plan Active' : 'Upgrade Plan (₹999)'}</span>
+          </button>
+
           <button
             onClick={() => onNavigateToMembers('Udhaari')}
             className="flex-1 sm:flex-initial px-3 sm:px-3.5 py-2.5 rounded-xl text-xs font-bold bg-amber-500/15 hover:bg-amber-500 text-amber-400 hover:text-dark-950 border border-amber-500/30 transition-all flex items-center justify-center gap-1.5"
@@ -313,6 +340,15 @@ const Dashboard = ({
           )}
         </div>
       </div>
+
+      {/* Upgrade to Pro Razorpay Modal */}
+      <UpgradePlanModal
+        isOpen={isUpgradeOpen}
+        onClose={() => setIsUpgradeOpen(false)}
+        onPaymentSuccess={() => {
+          fetchDashboardData();
+        }}
+      />
     </div>
   );
 };

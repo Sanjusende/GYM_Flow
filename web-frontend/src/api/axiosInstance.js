@@ -36,6 +36,10 @@ axiosInstance.interceptors.response.use(
         localStorage.removeItem('gymflow_token');
         localStorage.removeItem('gymflow_gym');
       }
+    } else if (error.response && error.response.status === 403) {
+      if (error.response.data?.upgradeRequired || error.response.data?.subscriptionStatus === 'expired') {
+        window.dispatchEvent(new CustomEvent('gymflow:subscription-expired'));
+      }
     }
     return Promise.reject(error);
   }

@@ -39,6 +39,26 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('gymflow_gym', JSON.stringify(gymData));
   };
 
+  const updateGymSession = (gymData) => {
+    setGym((prev) => {
+      const updated = { ...prev, ...gymData };
+      localStorage.setItem('gymflow_gym', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const refreshGymProfile = async () => {
+    try {
+      const res = await axiosInstance.get('/auth/me');
+      if (res.data.success && res.data.gym) {
+        updateGymSession(res.data.gym);
+        return res.data.gym;
+      }
+    } catch (err) {
+      console.warn('Failed to refresh gym profile:', err);
+    }
+  };
+
   const login = async (email, password) => {
     try {
       const res = await axiosInstance.post('/auth/login', { email, password });
@@ -221,6 +241,8 @@ export const AuthProvider = ({ children }) => {
         resetPassword,
         demoLogin,
         updateProfile,
+        updateGymSession,
+        refreshGymProfile,
         logout,
       }}
     >

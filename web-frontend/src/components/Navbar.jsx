@@ -11,7 +11,7 @@ import {
   Settings,
 } from 'lucide-react';
 
-const Navbar = ({ activeTab, setActiveTab, onOpenAddModal, onOpenGymSettings }) => {
+const Navbar = ({ activeTab, setActiveTab, onOpenAddModal, onOpenGymSettings, onOpenUpgrade }) => {
   const { gym, logout } = useAuth();
 
   const navItems = [
@@ -20,6 +20,8 @@ const Navbar = ({ activeTab, setActiveTab, onOpenAddModal, onOpenGymSettings }) 
     { id: 'plans', label: 'Plans', icon: CreditCard },
     { id: 'portal', label: 'Portal', icon: UserCheck },
   ];
+
+  const subStatus = gym?.subscriptionStatus || 'trial';
 
   return (
     <>
@@ -36,9 +38,20 @@ const Navbar = ({ activeTab, setActiveTab, onOpenAddModal, onOpenGymSettings }) 
                 <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white font-['Outfit']">
                   Gym<span className="text-neon-green">Flow</span>
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full bg-neon-green/10 text-neon-green border border-neon-green/30 shrink-0">
-                  PRO
-                </span>
+                <button
+                  type="button"
+                  onClick={onOpenUpgrade}
+                  title="Click to view subscription plan details"
+                  className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-full border shrink-0 transition-transform hover:scale-105 active:scale-95 ${
+                    subStatus === 'active'
+                      ? 'bg-neon-green/10 text-neon-green border-neon-green/30'
+                      : subStatus === 'expired'
+                      ? 'bg-rose-500/20 text-rose-400 border-rose-500/40 animate-pulse'
+                      : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                  }`}
+                >
+                  {subStatus === 'active' ? 'PRO' : subStatus === 'expired' ? 'EXPIRED' : 'TRIAL'}
+                </button>
               </div>
               <p className="text-[11px] sm:text-xs text-slate-400 font-medium truncate max-w-[140px] sm:max-w-[280px]">
                 {gym?.gymName || 'Fitness Club'}
