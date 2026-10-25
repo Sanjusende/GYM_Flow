@@ -38,6 +38,9 @@ connectDB()
 
 const app = express();
 
+// Trust reverse proxy (Render, Vercel, Heroku) for accurate IP resolution in rate-limiters
+app.set('trust proxy', 1);
+
 // Security Middlewares (MANDATORY)
 app.use(helmet());
 

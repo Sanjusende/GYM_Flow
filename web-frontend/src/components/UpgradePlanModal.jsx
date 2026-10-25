@@ -75,7 +75,7 @@ const UpgradePlanModal = ({ isOpen, onClose, onPaymentSuccess }) => {
         name: 'GymFlow SaaS',
         description: plan?.name || 'Pro Monthly Gym Management Subscription',
         image: 'https://cdn-icons-png.flaticon.com/512/2964/2964514.png',
-        order_id: orderId,
+        ...(orderId ? { order_id: orderId } : {}),
         prefill: {
           name: gym?.ownerName || gym?.gymName || '',
           email: gym?.email || '',
