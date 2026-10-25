@@ -147,6 +147,41 @@ const UpgradePlanModal = ({ isOpen, onClose, onPaymentSuccess }) => {
     }
   };
 
+  const handleInstantTestUpgrade = async () => {
+    try {
+      setErrorMsg('');
+      setVerifying(true);
+
+      const fakePaymentId = `pay_test_${Date.now()}`;
+      const verifyRes = await axiosInstance.post('/payment/verify-payment', {
+        razorpay_payment_id: fakePaymentId,
+      });
+
+      if (verifyRes.data.success) {
+        confetti({
+          particleCount: 140,
+          spread: 85,
+          origin: { y: 0.6 },
+          colors: ['#00F59B', '#10B981', '#3B82F6', '#F59E0B'],
+        });
+
+        if (verifyRes.data.gym) {
+          updateGymSession(verifyRes.data.gym);
+        }
+
+        onPaymentSuccess?.(verifyRes.data.gym);
+        onClose();
+      } else {
+        setErrorMsg(verifyRes.data.message || 'Verification failed.');
+      }
+    } catch (err) {
+      console.error('Test upgrade failed:', err);
+      setErrorMsg(err.response?.data?.message || 'Failed to activate test subscription.');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-dark-950/80 backdrop-blur-md animate-fade-in">
       <div className="glass-panel w-full max-w-lg rounded-3xl border border-neon-green/30 bg-dark-900/95 p-6 sm:p-8 shadow-2xl relative overflow-hidden">
@@ -231,7 +266,7 @@ const UpgradePlanModal = ({ isOpen, onClose, onPaymentSuccess }) => {
           </div>
         )}
 
-        {/* Pay Button */}
+        {/* Action Buttons */}
         <div className="mt-6 space-y-2.5">
           <button
             onClick={handlePayment}
@@ -246,10 +281,21 @@ const UpgradePlanModal = ({ isOpen, onClose, onPaymentSuccess }) => {
             ) : (
               <>
                 <CreditCard className="h-4 w-4" />
-                <span>Pay ₹999 with Razorpay (UPI / Card / NetBanking)</span>
+                <span>Pay ₹999 with Razorpay (UPI / Cards)</span>
                 <ArrowRight className="h-4 w-4" />
               </>
             )}
+          </button>
+
+          {/* 1-Click Instant Upgrade for Testing/Demo */}
+          <button
+            type="button"
+            onClick={handleInstantTestUpgrade}
+            disabled={loading || verifying}
+            className="w-full py-2.5 px-4 rounded-xl font-semibold text-xs bg-dark-800 hover:bg-dark-750 text-neon-green border border-neon-green/30 hover:border-neon-green/60 flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-60"
+          >
+            <Zap className="h-3.5 w-3.5 fill-neon-green" />
+            <span>⚡ 1-Click Instant Upgrade (Test / Demo Mode)</span>
           </button>
         </div>
 

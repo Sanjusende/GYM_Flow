@@ -95,7 +95,6 @@ const createOrder = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error('Razorpay order creation error:', error);
     const isAuthError =
       error.statusCode === 401 ||
       error.error?.code === 'BAD_REQUEST_ERROR' ||
@@ -105,7 +104,7 @@ const createOrder = async (req, res, next) => {
     // If Razorpay API rejects server credentials (401), gracefully fall back to direct Standard Web Checkout
     // so the modal can still open in browser with UPI, Cards, NetBanking.
     if (isAuthError) {
-      console.warn('⚠️ Razorpay 401: Falling back to direct Standard Web Checkout.');
+      console.warn('⚠️ Razorpay credentials invalid (401): Falling back to direct Standard Web Checkout.');
       return res.status(200).json({
         success: true,
         order_id: null,
@@ -123,6 +122,8 @@ const createOrder = async (req, res, next) => {
         },
       });
     }
+
+    console.error('Razorpay order creation error:', error);
 
     res.status(error.statusCode || 500).json({
       success: false,
