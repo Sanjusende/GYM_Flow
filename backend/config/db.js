@@ -18,7 +18,8 @@ const connectDB = async () => {
 
   try {
     const conn = await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 30000,
+      connectTimeoutMS: 30000,
     });
     console.log(`✅ MongoDB Connected Successfully: ${conn.connection.host}`);
     return conn;
@@ -28,7 +29,8 @@ const connectDB = async () => {
     // If SRV DNS query refused on Windows or primary fails, try direct non-SRV replica set
     try {
       const fallbackConn = await mongoose.connect(DIRECT_FALLBACK_URI, {
-        serverSelectionTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 30000,
+        connectTimeoutMS: 30000,
       });
       console.log(`✅ MongoDB Connected via Direct Shard Fallback: ${fallbackConn.connection.host}`);
       return fallbackConn;
