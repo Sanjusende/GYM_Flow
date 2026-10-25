@@ -18,24 +18,47 @@ const createTransporter = () => {
       user: user.trim(),
       pass: pass.trim().replace(/\s+/g, ''), // Supports Gmail App Password with or without spaces
     },
+    connectionTimeout: 8000,
+    greetingTimeout: 8000,
+    socketTimeout: 8000,
   });
 };
 
 /**
- * Send dark-themed HTML verification OTP email to Gym Owner
+ * Send dark-themed HTML OTP email to Gym Owner (Verification or Password Reset)
  * @param {Object} options
  * @param {string} options.toEmail
  * @param {string} options.otp
- * @param {string} options.gymName
- * @param {string} options.ownerName
+ * @param {string} [options.gymName]
+ * @param {string} [options.ownerName]
+ * @param {'VERIFICATION'|'PASSWORD_RESET'} [options.type]
  * @returns {Promise<{ success: boolean, messageId?: string, error?: string }>}
  */
-const sendEmailOtp = async ({ toEmail, otp, gymName = 'Your Gym', ownerName = 'Gym Owner' }) => {
+const sendEmailOtp = async ({
+  toEmail,
+  otp,
+  gymName = 'Your Gym',
+  ownerName = 'Gym Owner',
+  type = 'VERIFICATION',
+}) => {
   try {
     const transporter = createTransporter();
     if (!transporter) {
       return { success: false, error: 'Email credentials not configured in environment variables.' };
     }
+
+    const isReset = type === 'PASSWORD_RESET';
+    const emailSubject = isReset
+      ? `🔑 Reset Your GymFlow Password: ${otp}`
+      : `🔐 Your GymFlow Verification Code: ${otp}`;
+    const headerTitle = isReset ? 'Reset Your Password' : 'Verify Your Account';
+    const mainMessage = isReset
+      ? `We received a request to reset the password for your <strong style="color: #00F59B;">${gymName}</strong> account. Please use the following 6-digit One-Time Password (OTP) to set up your new password:`
+      : `Thank you for onboarding <strong style="color: #00F59B;">${gymName}</strong> to GymFlow. Please use the following 6-digit One-Time Password (OTP) to verify your account and activate your dashboard:`;
+    const boxTitle = isReset ? 'Password Reset Code' : 'Your Verification OTP';
+    const disclaimer = isReset
+      ? 'If you did not request a password reset, your account is safe and you can safely ignore this email.'
+      : 'If you did not initiate this registration, please disregard this email or contact support.';
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -43,7 +66,7 @@ const sendEmailOtp = async ({ toEmail, otp, gymName = 'Your Gym', ownerName = 'G
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GymFlow Verification Code</title>
+  <title>${headerTitle} - GymFlow</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #080c14; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #f1f5f9;">
   <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #080c14; padding: 40px 15px;">
@@ -56,7 +79,7 @@ const sendEmailOtp = async ({ toEmail, otp, gymName = 'Your Gym', ownerName = 'G
           <tr>
             <td style="padding: 32px 32px 20px 32px; text-align: center; background: linear-gradient(180deg, #131d35 0%, #0f172a 100%); border-bottom: 1px solid #1e293b;">
               <div style="display: inline-block; padding: 12px; background: rgba(0, 245, 155, 0.12); border: 1px solid rgba(0, 245, 155, 0.3); border-radius: 50%; margin-bottom: 12px;">
-                <span style="font-size: 28px;">⚡</span>
+                <span style="font-size: 28px;">${isReset ? '🔑' : '⚡'}</span>
               </div>
               <h1 style="margin: 0; font-size: 26px; font-weight: 900; letter-spacing: -0.5px; color: #ffffff;">
                 Gym<span style="color: #00F59B;">Flow</span>
@@ -74,13 +97,13 @@ const sendEmailOtp = async ({ toEmail, otp, gymName = 'Your Gym', ownerName = 'G
                 Hello <strong style="color: #ffffff;">${ownerName}</strong>,
               </p>
               <p style="margin: 0 0 24px 0; font-size: 14px; color: #94a3b8; line-height: 1.6;">
-                Thank you for onboarding <strong style="color: #00F59B;">${gymName}</strong> to GymFlow. Please use the following 6-digit One-Time Password (OTP) to verify your account and activate your dashboard:
+                ${mainMessage}
               </p>
 
               <!-- OTP Code Box -->
               <div style="background: #020617; border: 1.5px dashed #00F59B; border-radius: 14px; padding: 22px; text-align: center; margin: 28px 0;">
                 <span style="display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; font-weight: 700; margin-bottom: 8px;">
-                  Your Verification OTP
+                  ${boxTitle}
                 </span>
                 <span style="display: inline-block; font-size: 38px; font-weight: 900; letter-spacing: 10px; color: #00F59B; font-family: 'Courier New', Courier, monospace; text-shadow: 0 0 16px rgba(0, 245, 155, 0.4);">
                   ${otp}
@@ -98,7 +121,7 @@ const sendEmailOtp = async ({ toEmail, otp, gymName = 'Your Gym', ownerName = 'G
               </div>
 
               <p style="margin: 0; font-size: 13px; color: #64748b; line-height: 1.5;">
-                If you did not initiate this registration, please disregard this email or contact support.
+                ${disclaimer}
               </p>
             </td>
           </tr>
@@ -126,8 +149,8 @@ const sendEmailOtp = async ({ toEmail, otp, gymName = 'Your Gym', ownerName = 'G
     const mailOptions = {
       from: `"GymFlow Security" <${process.env.EMAIL_USER}>`,
       to: toEmail,
-      subject: `🔐 Your GymFlow Verification Code: ${otp}`,
-      text: `Hello ${ownerName},\n\nYour GymFlow verification OTP for ${gymName} is: ${otp}\nThis code is valid for 10 minutes.\n\nNever share this code with anyone.\n\n- GymFlow Team`,
+      subject: emailSubject,
+      text: `Hello ${ownerName},\n\nYour GymFlow code for ${gymName} is: ${otp}\nThis code is valid for 10 minutes.\n\nNever share this code with anyone.\n\n- GymFlow Team`,
       html: htmlContent,
     };
 

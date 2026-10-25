@@ -9,10 +9,12 @@ const {
 } = require('../controllers/memberController');
 const { generateDietPlan } = require('../controllers/aiDietController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const checkSubscription = require('../middlewares/checkSubscription');
 const { aiLimiter } = require('../middlewares/rateLimiter');
 
-// All member routes require auth
+// All member routes require auth and active subscription / valid trial
 router.use(authMiddleware);
+router.use(checkSubscription);
 
 router.get('/', getMembers);
 router.post('/', addMember);

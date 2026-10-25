@@ -101,12 +101,14 @@ const register = async (req, res, next) => {
     🔑 ══════════════════════════════════════════════════════════ 🔑
     `);
 
-    // Dispatch dark-themed verification email to gym owner
-    await sendEmailOtp({
+    // Dispatch dark-themed verification email to gym owner in background (non-blocking)
+    sendEmailOtp({
       toEmail: email.toLowerCase(),
       otp: otpCode,
       gymName: gymName || 'My Fitness Hub',
       ownerName: finalOwner,
+    }).catch((err) => {
+      console.warn('⚠️ [Register] Background OTP email dispatch error:', err.message);
     });
 
     res.status(200).json({
@@ -115,7 +117,6 @@ const register = async (req, res, next) => {
       message: `OTP sent successfully to ${email.toLowerCase()} and +91 ${cleanPhone}. Please enter the 6-digit code to activate your account.`,
       phone: cleanPhone,
       email: email.toLowerCase(),
-      devOtp: otpCode, // For seamless testing & demo evaluation
     });
   } catch (error) {
     next(error);
@@ -163,7 +164,7 @@ const verifyOtp = async (req, res, next) => {
     if (!isDemoOtp && !isMatchingOtp) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired OTP code. (Demo test OTP: 123456)',
+        message: 'Invalid or expired OTP code. Please check your email and try again.',
       });
     }
 
@@ -195,6 +196,9 @@ const verifyOtp = async (req, res, next) => {
         upiQrCodeUrl: gym.upiQrCodeUrl || '',
         address: gym.address,
         isVerified: true,
+        subscriptionStatus: gym.subscriptionStatus || 'trial',
+        trialEndsAt: gym.trialEndsAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        subscriptionExpiresAt: gym.subscriptionExpiresAt || null,
       },
     });
   } catch (error) {
@@ -254,12 +258,14 @@ const resendOtp = async (req, res, next) => {
     🔑 ══════════════════════════════════════════════════════════ 🔑
     `);
 
-    // Send dark-themed HTML verification email dynamically to gym owner's email
-    await sendEmailOtp({
+    // Send dark-themed HTML verification email dynamically in background (non-blocking)
+    sendEmailOtp({
       toEmail: gym.email,
       otp: otpCode,
       gymName: gym.gymName,
       ownerName: gym.ownerName,
+    }).catch((err) => {
+      console.warn('⚠️ [ResendOtp] Background OTP email dispatch error:', err.message);
     });
 
     res.status(200).json({
@@ -267,7 +273,6 @@ const resendOtp = async (req, res, next) => {
       message: `A fresh 6-digit verification OTP has been sent to ${gym.email}. Please check your Inbox or Spam folder.`,
       email: gym.email,
       phone: gym.phone,
-      devOtp: otpCode,
     });
   } catch (error) {
     next(error);
@@ -310,6 +315,9 @@ const login = async (req, res, next) => {
         upiQrCodeUrl: gym.upiQrCodeUrl || '',
         address: gym.address,
         isVerified: gym.isVerified,
+        subscriptionStatus: gym.subscriptionStatus || 'trial',
+        trialEndsAt: gym.trialEndsAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        subscriptionExpiresAt: gym.subscriptionExpiresAt || null,
       },
     });
   } catch (error) {
@@ -349,8 +357,12 @@ const demoLogin = async (req, res, next) => {
     } else {
       if (!demoGym.isVerified) {
         demoGym.isVerified = true;
-        await demoGym.save();
       }
+      if (!demoGym.trialEndsAt) {
+        demoGym.trialEndsAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        demoGym.subscriptionStatus = 'trial';
+      }
+      await demoGym.save();
     }
 
     const token = generateToken(demoGym._id);
@@ -370,6 +382,9 @@ const demoLogin = async (req, res, next) => {
         address: demoGym.address,
         isVerified: true,
         isDemo: true,
+        subscriptionStatus: demoGym.subscriptionStatus || 'trial',
+        trialEndsAt: demoGym.trialEndsAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        subscriptionExpiresAt: demoGym.subscriptionExpiresAt || null,
       },
     });
   } catch (error) {
@@ -427,7 +442,135 @@ const updateProfile = async (req, res, next) => {
         upiQrCodeUrl: gym.upiQrCodeUrl || '',
         address: gym.address,
         isVerified: gym.isVerified,
+        subscriptionStatus: gym.subscriptionStatus || 'trial',
+        trialEndsAt: gym.trialEndsAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        subscriptionExpiresAt: gym.subscriptionExpiresAt || null,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Request Password Reset OTP
+// @route   POST /api/auth/forgot-password
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || !email.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid registered email address.',
+      });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const gym = await Gym.findOne({ email: cleanEmail });
+
+    if (!gym) {
+      return res.status(404).json({
+        success: false,
+        message: 'No registered gym found with this email address.',
+      });
+    }
+
+    // Generate 6-digit random OTP & 10 minutes expiry
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    gym.resetPasswordOtp = otpCode;
+    gym.resetPasswordExpires = otpExpiresAt;
+    await gym.save();
+
+    console.log(`
+    🔑 ══════════════════════════════════════════════════════════ 🔑
+       🔒 PASSWORD RESET OTP for (${gym.email}): [ ${otpCode} ]
+       🏢 Gym: ${gym.gymName} | Owner: ${gym.ownerName}
+       ⏳ Valid for 10 minutes
+    🔑 ══════════════════════════════════════════════════════════ 🔑
+    `);
+
+    // Dispatch dark-themed password reset email in background (non-blocking)
+    sendEmailOtp({
+      toEmail: gym.email,
+      otp: otpCode,
+      gymName: gym.gymName,
+      ownerName: gym.ownerName,
+      type: 'PASSWORD_RESET',
+    }).catch((err) => {
+      console.warn('⚠️ [ForgotPassword] Background email error:', err.message);
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `A 6-digit password reset OTP has been sent to ${gym.email}. Please check your Inbox or Spam folder.`,
+      email: gym.email,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Reset Password using OTP
+// @route   POST /api/auth/reset-password
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword, password } = req.body;
+    const finalPassword = newPassword || password;
+
+    if (!email || !otp || !finalPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, 6-digit OTP, and new password are all required.',
+      });
+    }
+
+    if (finalPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long.',
+      });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const gym = await Gym.findOne({ email: cleanEmail });
+
+    if (!gym) {
+      return res.status(404).json({
+        success: false,
+        message: 'Account not found. Please verify your email address.',
+      });
+    }
+
+    const inputOtp = otp.toString().trim();
+    const isMatchingOtp =
+      gym.resetPasswordOtp &&
+      gym.resetPasswordOtp === inputOtp &&
+      gym.resetPasswordExpires &&
+      new Date(gym.resetPasswordExpires) > new Date();
+
+    if (!isMatchingOtp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired OTP code. Please request a new password reset OTP.',
+      });
+    }
+
+    // Hash the new password with bcrypt (salt rounds = 10)
+    const salt = await bcrypt.genSalt(10);
+    gym.password = await bcrypt.hash(finalPassword, salt);
+
+    // Clear reset OTP fields
+    gym.resetPasswordOtp = undefined;
+    gym.resetPasswordExpires = undefined;
+    await gym.save();
+
+    console.log(`✅ [ResetPassword] Password successfully reset for: ${gym.email}`);
+
+    res.status(200).json({
+      success: true,
+      message: 'Password has been reset successfully! You can now log in with your new password.',
     });
   } catch (error) {
     next(error);
@@ -442,5 +585,8 @@ module.exports = {
   demoLogin,
   getMe,
   updateProfile,
+  forgotPassword,
+  resetPassword,
 };
+
 

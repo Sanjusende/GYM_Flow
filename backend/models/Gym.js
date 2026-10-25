@@ -53,9 +53,41 @@ const GymSchema = new mongoose.Schema(
     otpExpiresAt: {
       type: Date,
     },
+    resetPasswordOtp: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
+    },
     isDemo: {
       type: Boolean,
       default: false,
+    },
+    // Subscription & Monetization fields
+    subscriptionStatus: {
+      type: String,
+      enum: ['trial', 'active', 'expired'],
+      default: 'trial',
+    },
+    trialEndsAt: {
+      type: Date,
+      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    },
+    subscriptionExpiresAt: {
+      type: Date,
+      default: null,
+    },
+    razorpayOrderId: {
+      type: String,
+      default: '',
+    },
+    razorpayPaymentId: {
+      type: String,
+      default: '',
+    },
+    razorpaySubscriptionId: {
+      type: String,
+      default: '',
     },
   },
   { timestamps: true }

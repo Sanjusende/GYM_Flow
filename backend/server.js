@@ -14,6 +14,7 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const memberRoutes = require('./routes/memberRoutes');
 const planRoutes = require('./routes/planRoutes');
 const publicRoutes = require('./routes/publicRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 const dns = require('dns');
 
 // DNS server fallback for MongoDB SRV lookups
@@ -121,6 +122,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/members', memberRoutes);
 app.use('/api/plans', planRoutes);
+app.use('/api/payment', paymentRoutes);
+// Direct aliases as per Razorpay Standard Checkout spec
+app.use('/api', paymentRoutes);
 app.use('/api/public', publicRoutes);
 
 // Error Handling Middlewares

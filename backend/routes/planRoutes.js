@@ -7,8 +7,10 @@ const {
   deletePlan,
 } = require('../controllers/planController');
 const authMiddleware = require('../middlewares/authMiddleware');
+const checkSubscription = require('../middlewares/checkSubscription');
 
 router.use(authMiddleware);
+router.use(checkSubscription);
 
 router.get('/', getPlans);
 router.post('/', createPlan);
