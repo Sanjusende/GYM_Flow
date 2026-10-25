@@ -39,6 +39,27 @@ const createOrder = async (req, res, next) => {
 
     const razorpay = getRazorpayInstance();
 
+    // If Razorpay keys are not configured or missing, fall back to direct Standard Web Checkout
+    if (!razorpay) {
+      console.warn('⚠️ Razorpay credentials not configured: Falling back to direct Standard Web Checkout.');
+      return res.status(200).json({
+        success: true,
+        order_id: null,
+        order: null,
+        amount: amountInPaise,
+        currency: 'INR',
+        key: process.env.RAZORPAY_KEY_ID || 'rzp_test_TrnCiE9i67RID6',
+        clientCheckout: true,
+        plan: {
+          name: 'GymFlow Pro (Monthly)',
+          amount: Math.round(amountInPaise / 100),
+          amountInPaise,
+          currency: 'INR',
+          durationDays: 30,
+        },
+      });
+    }
+
     const orderOptions = {
       amount: amountInPaise,
       currency: 'INR',
@@ -78,7 +99,8 @@ const createOrder = async (req, res, next) => {
     const isAuthError =
       error.statusCode === 401 ||
       error.error?.code === 'BAD_REQUEST_ERROR' ||
-      error.error?.description === 'Authentication failed';
+      error.error?.description === 'Authentication failed' ||
+      error.message?.includes('RAZORPAY');
 
     // If Razorpay API rejects server credentials (401), gracefully fall back to direct Standard Web Checkout
     // so the modal can still open in browser with UPI, Cards, NetBanking.
